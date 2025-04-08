@@ -20,6 +20,8 @@ export default function LoginPage() {
       const res = await axios.post(route, formData);
       alert(res.data.message);
 
+      localStorage.setItem("token", res.data.token); // ✅ res now defined
+      window.dispatchEvent(new Event("storage")); 
       // Navigate to dashboard based on role
       if (role === 'shopkeeper') {
         navigate('/shopkeeper/dashboard');
