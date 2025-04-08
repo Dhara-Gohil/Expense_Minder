@@ -1,20 +1,32 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 export default function LoginPage() {
   const [formData, setFormData] = useState({ email: '', password: '' });
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
   const handleLogin = async (role) => {
+    const route =
+      role === 'shopkeeper'
+        ? 'http://localhost:5000/api/auth/login/shopkeeper'
+        : 'http://localhost:5000/api/auth/login/supplier';
+
     try {
-      const res = await axios.post('http://localhost:5000/api/auth/login', {
-        ...formData,
-        role,
-      });
-      alert(res.data.message); // You can navigate or store token here
+      const res = await axios.post(route, formData);
+      alert(res.data.message);
+
+      // Navigate to dashboard based on role
+      if (role === 'shopkeeper') {
+        navigate('/shopkeeper/dashboard');
+      } else {
+        navigate('/supplier/dashboard');
+      }
+
       setFormData({ email: '', password: '' });
     } catch (err) {
       alert(err.response?.data?.message || 'Login failed');

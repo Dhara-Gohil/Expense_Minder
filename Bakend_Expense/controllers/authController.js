@@ -39,3 +39,37 @@ export const signupSupplier = async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 };
+
+// Login as Shopkeeper
+export const loginShopkeeper = async (req, res) => {
+  const { email, password } = req.body;
+
+  try {
+    const shopkeeper = await Shopkeeper.findOne({ email });
+    if (!shopkeeper) return res.status(404).json({ message: "Shopkeeper not found" });
+
+    const isMatch = await bcrypt.compare(password, shopkeeper.password);
+    if (!isMatch) return res.status(401).json({ message: "Invalid credentials" });
+
+    res.status(200).json({ message: "Login successful as Shopkeeper", user: shopkeeper });
+  } catch (err) {
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+// Login as Supplier
+export const loginSupplier = async (req, res) => {
+  const { email, password } = req.body;
+
+  try {
+    const supplier = await Supplier.findOne({ email });
+    if (!supplier) return res.status(404).json({ message: "Supplier not found" });
+
+    const isMatch = await bcrypt.compare(password, supplier.password);
+    if (!isMatch) return res.status(401).json({ message: "Invalid credentials" });
+
+    res.status(200).json({ message: "Login successful as Supplier", user: supplier });
+  } catch (err) {
+    res.status(500).json({ message: "Server error" });
+  }
+};

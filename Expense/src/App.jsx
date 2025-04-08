@@ -8,6 +8,8 @@ import Contact from './pages/Contact';
 import SignUp from './pages/Signup';
 import Login from './pages/Login';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import ShopkeeperDashboard from './pages/ShopkeeperDashboard';
+import SupplierDashboard from './pages/SupplierDashboard';
 
 function App() {
   return (
@@ -22,6 +24,8 @@ function App() {
             <Route path="/contact" element={<Contact />} />
             <Route path="/signup" element={<SignUp />} />
             <Route path="/login" element={<Login />} />
+            <Route path="/shopkeeper/dashboard" element={<ShopkeeperDashboard />} />
+            <Route path="/supplier/dashboard" element={<SupplierDashboard />} />
           </Routes>
         </main>
         <Footer />
