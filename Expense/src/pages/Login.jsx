@@ -8,13 +8,14 @@ export default function LoginPage() {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
+  const handleLogin = async (role) => {
     try {
-      const res = await axios.post('http://localhost:5000/api/auth/login', formData);
-      alert(res.data.message); // Or navigate user after successful login
-      setFormData({ email: '', password: '' }); // Clear fields
+      const res = await axios.post('http://localhost:5000/api/auth/login', {
+        ...formData,
+        role,
+      });
+      alert(res.data.message); // You can navigate or store token here
+      setFormData({ email: '', password: '' });
     } catch (err) {
       alert(err.response?.data?.message || 'Login failed');
     }
@@ -27,7 +28,7 @@ export default function LoginPage() {
           Welcome <span className="text-yellow-500">Back</span>
         </h2>
 
-        <form className="space-y-5" onSubmit={handleSubmit}>
+        <form className="space-y-5" onSubmit={(e) => e.preventDefault()}>
           <div>
             <label className="block text-gray-700 font-medium mb-1">Email</label>
             <input
@@ -62,12 +63,23 @@ export default function LoginPage() {
             </a>
           </div>
 
-          <button
-            type="submit"
-            className="w-full bg-yellow-500 text-white font-semibold py-2 px-4 rounded-md hover:bg-yellow-600 transition"
-          >
-            Login
-          </button>
+          <div className="flex flex-col sm:flex-row gap-4">
+            <button
+              type="button"
+              onClick={() => handleLogin('shopkeeper')}
+              className="w-full bg-yellow-500 text-white font-semibold py-2 px-4 rounded-md hover:bg-yellow-600 transition"
+            >
+              Login as Shopkeeper
+            </button>
+
+            <button
+              type="button"
+              onClick={() => handleLogin('supplier')}
+              className="w-full bg-yellow-500 text-white font-semibold py-2 px-4 rounded-md hover:bg-yellow-600 transition"
+            >
+              Login as Supplier
+            </button>
+          </div>
         </form>
 
         <p className="text-sm text-center text-gray-600 mt-4">

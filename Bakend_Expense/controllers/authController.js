@@ -1,35 +1,41 @@
-import student from "../models/User.js";
+import Shopkeeper from "../models/Shopkeeper.js";
+import Supplier from "../models/Supplier.js";
 import bcrypt from "bcryptjs";
 
-export const registerUser = async (req, res) => {
-  const { name, email, password } = req.body;
+// Shopkeeper Signup
+export const signupShopkeeper = async (req, res) => {
+  const { name, email, password, shopName } = req.body;
 
   try {
-    const userExists = await student.findOne({ email });
-    if (userExists) return res.status(400).json({ message: "User already exists" });
+    const existing = await Shopkeeper.findOne({ email });
+    if (existing) return res.status(400).json({ message: "Shopkeeper already exists" });
 
-    const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(password, salt);
+    const hashedPassword = await bcrypt.hash(password, 10);
 
-    const user = await student.create({ name, email, password: hashedPassword });
-    res.status(201).json({ message: "User registered successfully", userId: user._id });
-  } catch (error) {
-    res.status(500).json({ message: "Server Error" });
+    const newUser = new Shopkeeper({ name, email, password: hashedPassword, shopName });
+    await newUser.save();
+
+    res.status(201).json({ message: "Shopkeeper registered successfully" });
+  } catch (err) {
+    res.status(500).json({ message: "Server error" });
   }
 };
 
-export const loginUser = async (req, res) => {
-  const { email, password } = req.body;
+// Supplier Signup
+export const signupSupplier = async (req, res) => {
+  const { name, email, password, companyName } = req.body;
 
   try {
-    const user = await student.findOne({ email });
-    if (!user) return res.status(400).json({ message: "Invalid credentials" });
+    const existing = await Supplier.findOne({ email });
+    if (existing) return res.status(400).json({ message: "Supplier already exists" });
 
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) return res.status(400).json({ message: "Invalid credentials" });
+    const hashedPassword = await bcrypt.hash(password, 10);
 
-    res.status(200).json({ message: "Login successful", userId: user._id });
-  } catch (error) {
-    res.status(500).json({ message: "Server Error" });
+    const newUser = new Supplier({ name, email, password: hashedPassword, companyName });
+    await newUser.save();
+
+    res.status(201).json({ message: "Supplier registered successfully" });
+  } catch (err) {
+    res.status(500).json({ message: "Server error" });
   }
 };

@@ -8,20 +8,20 @@ export default function SignupPage() {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-  
+  const handleSubmit = async (role) => {
+    const route =
+      role === 'shopkeeper'
+        ? 'http://localhost:5000/api/auth/signup/shopkeeper'
+        : 'http://localhost:5000/api/auth/signup/supplier';
+
     try {
-      const res = await axios.post('http://localhost:5000/api/auth/signup', formData);
+      const res = await axios.post(route, formData); // send to correct route
       alert(res.data.message);
-  
-      // Clear the form after successful signup
       setFormData({ name: '', email: '', password: '' });
     } catch (err) {
       alert(err.response?.data?.message || 'Error occurred');
     }
   };
-  
 
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4 py-12">
@@ -30,7 +30,7 @@ export default function SignupPage() {
           Create an <span className="text-yellow-500">Account</span>
         </h2>
 
-        <form className="space-y-5" onSubmit={handleSubmit}>
+        <form className="space-y-5">
           <div>
             <label className="block text-gray-700 font-medium mb-1">Name</label>
             <input
@@ -67,12 +67,23 @@ export default function SignupPage() {
             />
           </div>
 
-          <button
-            type="submit"
-            className="w-full bg-yellow-500 text-white font-semibold py-2 px-4 rounded-md hover:bg-yellow-600 transition"
-          >
-            Sign Up
-          </button>
+          <div className="flex flex-col sm:flex-row gap-4">
+            <button
+              type="button"
+              onClick={() => handleSubmit('shopkeeper')}
+              className="w-full bg-yellow-500 text-white font-semibold py-2 px-4 rounded-md hover:bg-yellow-600 transition"
+            >
+              Sign Up as Shopkeeper
+            </button>
+
+            <button
+              type="button"
+              onClick={() => handleSubmit('supplier')}
+              className="w-full bg-yellow-500 text-white font-semibold py-2 px-4 rounded-md hover:bg-yellow-600 transition"
+            >
+              Sign Up as Supplier
+            </button>
+          </div>
         </form>
 
         <p className="text-sm text-center text-gray-600 mt-4">
