@@ -31,43 +31,14 @@ export default function ShopkeeperDashboard() {
       >
         <h2 className="text-xl font-bold text-yellow-600 p-6 border-b">Dashboard</h2>
         <nav className="flex flex-col space-y-2 p-4">
-          <button
-            onClick={() => navigate('/inventory')}
-            className="text-left px-4 py-2 rounded hover:bg-yellow-100 transition"
-          >
-            Manage Inventory
-          </button>
-          <button
-            onClick={() => navigate('/orders')}
-            className="text-left px-4 py-2 rounded hover:bg-yellow-100 transition"
-          >
-            View Orders
-          </button>
-          <button
-            onClick={() => navigate('/suppliers')}
-            className="text-left px-4 py-2 rounded hover:bg-yellow-100 transition"
-          >
-            Add Supplier
-          </button>
-          <button
-            onClick={() => navigate('/suppliers')}
-            className="text-left px-4 py-2 rounded hover:bg-yellow-100 transition"
-          >
-            History
-          </button>
-          <button
-            onClick={() => navigate('/suppliers')}
-            className="text-left px-4 py-2 rounded hover:bg-yellow-100 transition"
-          >
-           Remainders
-          </button>
-          <button
-            onClick={() => navigate('/suppliers')}
-            className="text-left px-4 py-2 rounded hover:bg-yellow-100 transition"
-          >
-            Expense Report
-          </button>
-        </nav>
+  <button onClick={() => navigate('/shopkeeper/inventory')} className="text-left px-4 py-2 rounded hover:bg-yellow-100 transition">Manage Inventory</button>
+  <button onClick={() => navigate('/shopkeeper/orders')} className="text-left px-4 py-2 rounded hover:bg-yellow-100 transition">View Orders</button>
+  <button onClick={() => navigate('/shopkeeper/suppliers')} className="text-left px-4 py-2 rounded hover:bg-yellow-100 transition">Add Supplier</button>
+  <button onClick={() => navigate('/shopkeeper/history')} className="text-left px-4 py-2 rounded hover:bg-yellow-100 transition">History</button>
+  <button onClick={() => navigate('/shopkeeper/reminders')} className="text-left px-4 py-2 rounded hover:bg-yellow-100 transition">Reminders</button>
+  <button onClick={() => navigate('/shopkeeper/expenses')} className="text-left px-4 py-2 rounded hover:bg-yellow-100 transition">Expense Report</button>
+</nav>
+
       </aside>
 
       {/* Toggle Button */}

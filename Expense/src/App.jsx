@@ -10,6 +10,14 @@ import Login from './pages/Login';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import ShopkeeperDashboard from './pages/ShopkeeperDashboard';
 import SupplierDashboard from './pages/SupplierDashboard';
+// Shopkeeper Pages
+import ManageInventory from './pages/shopkeeperpages/ManageInventory';
+import ViewOrders from './pages/shopkeeperpages/ViewOrders';
+import AddSupplier from './pages/shopkeeperpages/AddSupplier';
+import History from './pages/shopkeeperpages/History';
+import Reminders from './pages/shopkeeperpages/Reminders';
+import ExpenseReport from './pages/shopkeeperpages/ExpenseReport';
+
 
 function App() {
   return (
@@ -18,6 +26,7 @@ function App() {
         <Header />
         <main className="flex-grow">
           <Routes>
+            
             <Route path="/" element={<HomePage />} />
             <Route path="/features" element={<Features />} />
             <Route path="/pricing" element={<Pricing />} />
@@ -26,6 +35,14 @@ function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/shopkeeper/dashboard" element={<ShopkeeperDashboard />} />
             <Route path="/supplier/dashboard" element={<SupplierDashboard />} />
+            
+            {/* Shopkeeper Routes */}
+            <Route path="/shopkeeper/inventory" element={<ManageInventory />} />
+            <Route path="/shopkeeper/orders" element={<ViewOrders />} />
+            <Route path="/shopkeeper/suppliers" element={<AddSupplier />} />
+            <Route path="/shopkeeper/history" element={<History />} />
+            <Route path="/shopkeeper/reminders" element={<Reminders />} />
+            <Route path="/shopkeeper/expenses" element={<ExpenseReport />} />
           </Routes>
         </main>
         <Footer />
