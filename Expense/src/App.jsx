@@ -18,7 +18,13 @@ import History from './pages/shopkeeperpages/History';
 import Reminders from './pages/shopkeeperpages/Reminders';
 import ExpenseReport from './pages/shopkeeperpages/ExpenseReport';
 import SupplierReply from './pages/shopkeeperpages/SupplierReply';
-
+// Supplier Pages
+import ReceivedOrders from './pages/supplierpages/ReceivedOrders';
+import PendingPayments from './pages/supplierpages/PendingPayments';
+import ChatWithShopkeepers from './pages/supplierpages/ChatWithShopkeepers';
+import ManageProducts from './pages/supplierpages/ManageProducts';
+import MonthlyExpense from './pages/supplierpages/MonthlyExpense';
+import BillGeneration from './pages/supplierpages/BillGeneration';
 
 function App() {
   return (
@@ -27,7 +33,6 @@ function App() {
         <Header />
         <main className="flex-grow">
           <Routes>
-            
             <Route path="/" element={<HomePage />} />
             <Route path="/features" element={<Features />} />
             <Route path="/pricing" element={<Pricing />} />
@@ -36,7 +41,7 @@ function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/shopkeeper/dashboard" element={<ShopkeeperDashboard />} />
             <Route path="/supplier/dashboard" element={<SupplierDashboard />} />
-            
+
             {/* Shopkeeper Routes */}
             <Route path="/shopkeeper/inventory" element={<ManageInventory />} />
             <Route path="/shopkeeper/orders" element={<ViewOrders />} />
@@ -45,6 +50,14 @@ function App() {
             <Route path="/shopkeeper/reminders" element={<Reminders />} />
             <Route path="/shopkeeper/expenses" element={<ExpenseReport />} />
             <Route path="/supplier-reply" element={<SupplierReply />} />
+
+            {/* Supplier Routes */}
+            <Route path="/supplier/received-orders" element={<ReceivedOrders />} />
+            <Route path="/supplier/pending-payments" element={<PendingPayments />} />
+            <Route path="/supplier/chat" element={<ChatWithShopkeepers />} />
+            <Route path="/supplier/products" element={<ManageProducts />} />
+            <Route path="/supplier/monthly-expense" element={<MonthlyExpense />} />
+            <Route path="/supplier/bill-generation" element={<BillGeneration />} />
           </Routes>
         </main>
         <Footer />

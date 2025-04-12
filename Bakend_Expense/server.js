@@ -8,6 +8,8 @@ import { Server } from 'socket.io';
 import chatRoutes from './routes/Shopkeeper/chatRoutes.js';
 import productRoutes from './routes/Shopkeeper/productRoutes.js';
 import supplierRoutes from './routes/Shopkeeper/supplierRoutes.js';
+import supplierProductRoutes from './routes/supplier/productRoutes.js'; 
+import invoiceRoutes from './routes/supplier/invoiceRoutes.js';
 
 
 
@@ -25,7 +27,7 @@ const io = new Server(server, {
   },
 });
 
-// Connect DB
+
 mongoose.connect(process.env.MONGO_URI).then(() => console.log('MongoDB Connected'))
   .catch(err => console.log(err));
 
@@ -47,7 +49,8 @@ io.on('connection', (socket) => {
 app.use('/api/auth', authRoutes);
 app.use('/api/products', productRoutes);
 app.use('/api/shopkeeper/suppliers', supplierRoutes);
-
+app.use('/api/supplier', supplierProductRoutes);
+app.use('/api/supplier/invoice', invoiceRoutes);
 
 const PORT = process.env.PORT || 5000;
 server.listen(PORT, () => console.log(`Server running on port ${PORT}`));

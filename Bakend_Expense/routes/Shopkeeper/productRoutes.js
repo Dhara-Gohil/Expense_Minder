@@ -13,4 +13,4 @@ router.post('/', addProduct);
 router.put('/:id', updateProduct);
 router.delete('/:id', deleteProduct);
 
-export default router;
+export default router; 
