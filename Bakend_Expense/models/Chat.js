@@ -1,14 +1,16 @@
 import mongoose from 'mongoose';
 
 const chatSchema = new mongoose.Schema({
-  supplier: String,
-  message: String,
-  sender: String, // 'Shopkeeper' or 'Supplier'
-  timestamp: {
-    type: Date,
-    default: Date.now,
-  },
+  shopkeeperName: String,
+  supplierName: String,
+  item: String,
+  quantity: String,
+  timestamp: String,
+  status: {
+    type: String,
+    default: 'Pending',
+    enum: ['Pending', 'Delivered'],
+  }
 });
 
-const Chat = mongoose.model('Chat', chatSchema);
-export default Chat;
+export default mongoose.model('Chat', chatSchema);

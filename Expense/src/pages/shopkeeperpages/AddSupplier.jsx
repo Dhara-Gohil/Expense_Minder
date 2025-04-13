@@ -1,153 +1,135 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import io from 'socket.io-client';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom'; // ✅ Correct import
 
 const socket = io('http://localhost:5000');
 
-const SupplierChat = () => {
-  const navigate = useNavigate(); // ✅ useNavigate hook
+const ShopkeeperChat = () => {
   const [suppliers, setSuppliers] = useState([]);
   const [selectedSupplier, setSelectedSupplier] = useState('');
-  const [itemName, setItemName] = useState('');
+  const [item, setItem] = useState('');
   const [quantity, setQuantity] = useState('');
   const [messages, setMessages] = useState([]);
+  const messagesEndRef = useRef(null);
 
-  // ✅ Manual product items
-  const manualItems = [
-    'Cement',
-    'Bricks',
-    'Sand',
-    'Steel Rods',
-    'Paint',
-    'Tiles',
-    'Gravel'
-  ];
-
-  // Fetch supplier list
   useEffect(() => {
-    const fetchSuppliers = async () => {
-      try {
-        const res = await axios.get('http://localhost:5000/api/shopkeeper/suppliers');
-        setSuppliers(res.data);
-      } catch (err) {
-        console.error('Failed to fetch suppliers:', err);
-      }
-    };
+    axios.get('http://localhost:5000/api/shopkeeper/suppliers/')
+      .then(res => setSuppliers(res.data))
+      .catch(err => console.error('Error fetching suppliers:', err));
 
-    fetchSuppliers();
-  }, []);
+    axios.get('http://localhost:5000/api/shopkeeper/chat')
+      .then(res => setMessages(res.data))
+      .catch(err => console.error('Error fetching messages:', err));
 
-  // Fetch past chats
-  useEffect(() => {
-    const fetchChats = async () => {
-      try {
-        const res = await axios.get('http://localhost:5000/api/shopkeeper/chat');
-        setMessages(res.data);
-      } catch (err) {
-        console.error('Failed to fetch chats:', err);
-      }
-    };
-
-    fetchChats();
-  }, []);
-
-  // Socket listener for real-time messages
-  useEffect(() => {
-    socket.on('chatMessage', (msg) => {
-      setMessages((prev) => [...prev, msg]);
+    socket.on('supplierToShopkeeper', (msg) => {
+      setMessages(prevMessages =>
+        prevMessages.map(m =>
+          m.shopkeeperName === msg.shopkeeperName &&
+          m.supplierName === msg.supplierName &&
+          m.item === msg.item &&
+          m.quantity === msg.quantity &&
+          !m.reply
+            ? { ...m, reply: msg.reply }
+            : m
+        )
+      );
     });
 
-    return () => {
-      socket.off('chatMessage');
-    };
+    return () => socket.off('supplierToShopkeeper');
   }, []);
 
-  const handleSend = () => {
-    if (!selectedSupplier || !itemName || !quantity) return;
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [messages]);
+
+  const handleSend = async () => {
+    if (!item || !quantity || !selectedSupplier) return;
 
     const newMsg = {
-      supplier: selectedSupplier,
-      item: itemName,
+      shopkeeperName: 'Shopkeeper1',
+      supplierName: selectedSupplier,
+      item,
       quantity,
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
     };
 
-    axios.post('http://localhost:5000/api/shopkeeper/chat', newMsg);
-    socket.emit('chatMessage', newMsg);
-
-    setMessages((prev) => [...prev, newMsg]);
-    setItemName('');
-    setQuantity('');
+    try {
+      socket.emit('shopkeeperToSupplier', newMsg);
+      await axios.post('http://localhost:5000/api/shopkeeper/chat', newMsg);
+      setMessages([...messages, newMsg]);
+      setItem('');
+      setQuantity('');
+    } catch (err) {
+      console.error('Error sending message:', err);
+    }
   };
 
   return (
-    <div className="p-4 max-w-xl mx-auto">
-      <h2 className="text-xl font-bold mb-4">Chat with Suppliers</h2>
+    <div className="max-w-2xl mx-auto bg-white rounded-lg shadow-lg p-4 h-[80vh] flex flex-col">
+      <h2 className="text-2xl font-bold mb-4 text-center text-blue-700">Shopkeeper Chat</h2>
 
-      <div className="flex flex-col gap-3">
-        {/* Supplier Dropdown */}
+      <div className="mb-3">
         <select
           value={selectedSupplier}
           onChange={(e) => setSelectedSupplier(e.target.value)}
-          className="border p-2 rounded"
+          className="border p-2 w-full rounded"
         >
-          <option value="">Choose Supplier</option>
-          {suppliers.map((s, i) => (
-            <option key={i} value={s.name}>
-              {s.name}
-            </option>
+          <option value="">Select Supplier</option>
+          {suppliers.map((name, i) => (
+            <option key={i} value={name}>{name}</option>
           ))}
         </select>
+      </div>
 
-        {/* ✅ Item Dropdown */}
-        <select
-          value={itemName}
-          onChange={(e) => setItemName(e.target.value)}
-          className="border p-2 rounded"
-        >
-          <option value="">Select Item</option>
-          {manualItems.map((item, index) => (
-            <option key={index} value={item}>{item}</option>
-          ))}
-        </select>
+      <div className="flex-1 overflow-y-auto border rounded p-3 bg-gray-50 mb-3 space-y-3">
+        {messages
+          .filter(m => m.supplierName === selectedSupplier)
+          .map((m, i) => (
+            <div key={i}>
+              {/* Shopkeeper Message */}
+              <div className="flex justify-end">
+                <div className="bg-blue-500 text-white px-4 py-2 rounded-lg max-w-xs">
+                  <div><b>{m.item} x {m.quantity}</b></div>
+                  <div className="text-sm mt-1">{new Date(m.timestamp).toLocaleTimeString()}</div>
+                </div>
+              </div>
 
-        {/* Quantity input */}
+              {/* Supplier Reply */}
+              {m.reply && (
+                <div className="flex justify-start mt-2">
+                  <div className="bg-green-100 text-black px-4 py-2 rounded-lg max-w-xs">
+                    <div><b>Reply:</b> {m.reply}</div>
+                  </div>
+                </div>
+              )}
+            </div>
+          ))} 
+        <div ref={messagesEndRef} />
+      </div>
+
+      <div className="grid grid-cols-2 gap-2 mb-2">
         <input
-          type="number"
+          className="border p-2 rounded"
+          placeholder="Item"
+          value={item}
+          onChange={e => setItem(e.target.value)}
+        />
+        <input
+          className="border p-2 rounded"
           placeholder="Quantity"
           value={quantity}
-          onChange={(e) => setQuantity(e.target.value)}
-          className="border p-2 rounded"
+          onChange={e => setQuantity(e.target.value)}
         />
-
-        <button
-          onClick={handleSend}
-          className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
-        >
-          Send Message
-        </button>
       </div>
 
-      {/* Chat box */}
-      <div className="mt-6 border rounded p-4 h-60 overflow-y-auto bg-gray-50">
-        {messages.map((msg, i) => (
-          <div key={i} className="mb-2 border-b pb-2">
-            <strong>{msg.supplier}</strong>: {msg.item} x {msg.quantity}
-            <div className="text-sm text-gray-500">
-              {new Date(msg.timestamp).toLocaleString()}
-            </div>
-            <button
-              onClick={() => navigate('/supplier-reply', { state: { message: msg } })}
-              className="text-blue-600 underline text-sm mt-1"
-            >
-              Reply
-            </button>
-          </div>
-        ))}
-      </div>
+      <button
+        onClick={handleSend}
+        className="bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition"
+      >
+        Send
+      </button>
     </div>
   );
 };
 
-export default SupplierChat;
+export default ShopkeeperChat;

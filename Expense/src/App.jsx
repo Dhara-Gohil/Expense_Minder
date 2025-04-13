@@ -17,7 +17,7 @@ import AddSupplier from './pages/shopkeeperpages/AddSupplier';
 import History from './pages/shopkeeperpages/History';
 import Reminders from './pages/shopkeeperpages/Reminders';
 import ExpenseReport from './pages/shopkeeperpages/ExpenseReport';
-import SupplierReply from './pages/shopkeeperpages/SupplierReply';
+// import SupplierReply from './pages/shopkeeperpages/SupplierReply';
 // Supplier Pages
 import ReceivedOrders from './pages/supplierpages/ReceivedOrders';
 import PendingPayments from './pages/supplierpages/PendingPayments';
@@ -49,7 +49,7 @@ function App() {
             <Route path="/shopkeeper/history" element={<History />} />
             <Route path="/shopkeeper/reminders" element={<Reminders />} />
             <Route path="/shopkeeper/expenses" element={<ExpenseReport />} />
-            <Route path="/supplier-reply" element={<SupplierReply />} />
+            {/* <Route path="/supplier-reply" element={<SupplierReply />} /> */}
 
             {/* Supplier Routes */}
             <Route path="/supplier/received-orders" element={<ReceivedOrders />} />

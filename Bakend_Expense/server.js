@@ -5,11 +5,14 @@ import mongoose from 'mongoose';
 import authRoutes from './routes/authRoutes.js';
 import http from 'http'; 
 import { Server } from 'socket.io';
-import chatRoutes from './routes/Shopkeeper/chatRoutes.js';
+//import chatRoutes from './routes/Shopkeeper/chatRoutes.js';
 import productRoutes from './routes/Shopkeeper/productRoutes.js';
 import supplierRoutes from './routes/Shopkeeper/supplierRoutes.js';
 import supplierProductRoutes from './routes/supplier/productRoutes.js'; 
 import invoiceRoutes from './routes/supplier/invoiceRoutes.js';
+//import supplierChatRoutes from './routes/supplier/supplierChatRoutes.js';
+import chatRoutes from './routes/chatRoutes.js';
+
 
 
 
@@ -32,25 +35,30 @@ mongoose.connect(process.env.MONGO_URI).then(() => console.log('MongoDB Connecte
   .catch(err => console.log(err));
 
 // Routes
-app.use('/api/shopkeeper/chat', chatRoutes);
+//app.use('/api/shopkeeper/chat', chatRoutes);
 
 // Socket.io real-time
 io.on('connection', (socket) => {
-  console.log('A user connected');
+  console.log('User connected');
 
   socket.on('chatMessage', (msg) => {
-    socket.broadcast.emit('chatMessage', msg);
+    io.emit('chatMessage', msg);
   });
 
   socket.on('disconnect', () => {
-    console.log('A user disconnected');
+    console.log('User disconnected');
   });
 });
+
+
 app.use('/api/auth', authRoutes);
 app.use('/api/products', productRoutes);
 app.use('/api/shopkeeper/suppliers', supplierRoutes);
 app.use('/api/supplier', supplierProductRoutes);
 app.use('/api/supplier/invoice', invoiceRoutes);
+app.use('/api/supplier/chat', chatRoutes);
+app.use('/api/Shopkeeper/chat', chatRoutes);
+//app.use('/api/supplier/chat', supplierChatRoutes);
 
 const PORT = process.env.PORT || 5000;
 server.listen(PORT, () => console.log(`Server running on port ${PORT}`));
