@@ -1,12 +1,38 @@
-# React + Vite
+# Supplier-Order-Management-System
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A web-based application for managing orders between **shopkeepers** and **suppliers**. The system enables shopkeepers to place orders for products, view order history, and manage inventory. Suppliers can receive orders and send updates in real time.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+### Shopkeeper Features
+- **Product Order Form**: Shopkeepers can select products and specify the quantity to place an order.
+- **Shopping Cart**: Add multiple items to the cart and place orders.
+- **Order History**: View past orders and details of each order.
+- **Inventory Management**: Manage inventory by updating stock and prices.
+- **Bulk Order Upload**: Upload a CSV file to place bulk orders for products.
 
-## Expanding the ESLint configuration
+### Supplier Features
+- **Order Reception**: Receive orders from shopkeepers, view product details, and quantities.
+- **Order Updates**: Suppliers can confirm the received order and update its status.
+- **Invoice Generation**: Generate downloadable invoices with order details and amounts.
+- **Payment Tracking**: Track payment statuses and send reminders to shopkeepers.
 
-If you are developing a production application, we recommend using TypeScript and enable type-aware lint rules. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+### Admin Features
+- **Add Supplier**: Admin can add new suppliers to the system.
+- **Reminders & Notifications**: Automatically send reminders for pending payments via text, email, and WhatsApp.
+
+## Technologies Used
+- **Frontend**: React.js, Tailwind CSS
+- **Backend**: Node.js, Express.js
+- **Database**: MongoDB
+- **PDF Generation**: jsPDF, jsPDF-AutoTable
+- **Real-Time Communication**: Socket.io (for real-time chat and order updates)
+- **Authentication**: JWT for secure login and authorization
+
+## Installation
+
+### Clone the repository
+```bash
+git clone https://github.com/your-username/supplier-order-management.git
+cd supplier-order-management
+
