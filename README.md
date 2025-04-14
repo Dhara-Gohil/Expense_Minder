@@ -1,4 +1,4 @@
-# Supplier-Order-Management-System
+# Expense Minder
 
 A web-based application for managing orders between **shopkeepers** and **suppliers**. The system enables shopkeepers to place orders for products, view order history, and manage inventory. Suppliers can receive orders and send updates in real time.
 
