@@ -10,8 +10,11 @@ import productRoutes from './routes/Shopkeeper/productRoutes.js';
 import supplierRoutes from './routes/Shopkeeper/supplierRoutes.js';
 import supplierProductRoutes from './routes/supplier/productRoutes.js'; 
 import invoiceRoutes from './routes/supplier/invoiceRoutes.js';
+
 //import supplierChatRoutes from './routes/supplier/supplierChatRoutes.js';
 import chatRoutes from './routes/chatRoutes.js';
+import shopkeeperRoutes from './routes/Shopkeeper/shopkeeperRoutes.js';
+
 
 
 
@@ -54,6 +57,7 @@ io.on('connection', (socket) => {
 app.use('/api/auth', authRoutes);
 app.use('/api/products', productRoutes);
 app.use('/api/shopkeeper/suppliers', supplierRoutes);
+app.use('/api/supplier/shopkeepers', shopkeeperRoutes);
 app.use('/api/supplier', supplierProductRoutes);
 app.use('/api/supplier/invoice', invoiceRoutes);
 app.use('/api/supplier/chat', chatRoutes);

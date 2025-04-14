@@ -1,6 +1,10 @@
 import Shopkeeper from "../models/Shopkeeper.js";
 import Supplier from "../models/Supplier.js";
 import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
+import dotenv from "dotenv";
+
+dotenv.config()
 
 // Shopkeeper Signup
 export const signupShopkeeper = async (req, res) => {
@@ -41,6 +45,8 @@ export const signupSupplier = async (req, res) => {
 };
 
 // Login as Shopkeeper
+//  // make sure this is imported at the top
+
 export const loginShopkeeper = async (req, res) => {
   const { email, password } = req.body;
 
@@ -51,11 +57,17 @@ export const loginShopkeeper = async (req, res) => {
     const isMatch = await bcrypt.compare(password, shopkeeper.password);
     if (!isMatch) return res.status(401).json({ message: "Invalid credentials" });
 
-    res.status(200).json({ message: "Login successful as Shopkeeper", user: shopkeeper });
+    // ✅ Generate token using the secret key from .env
+    const token = jwt.sign({ id: shopkeeper._id }, process.env.JWT_SECRET, { expiresIn: '1d' });
+
+    res.status(200).json({ message: "Login successful as Shopkeeper", user: shopkeeper, token });
   } catch (err) {
+    console.log("Login error:", err);
     res.status(500).json({ message: "Server error" });
   }
 };
+
+
 
 // Login as Supplier
 export const loginSupplier = async (req, res) => {

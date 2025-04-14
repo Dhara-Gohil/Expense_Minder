@@ -44,15 +44,19 @@ const ShopkeeperChat = () => {
 
   const handleSend = async () => {
     if (!item || !quantity || !selectedSupplier) return;
+  
+    const shopkeeperName = localStorage.getItem('shopkeeperName'); // ✅ Get name from localStorage
+    console.log('Shopkeeper Name:', shopkeeperName);
 
+  
     const newMsg = {
-      shopkeeperName: 'Shopkeeper1',
+      shopkeeperName,
       supplierName: selectedSupplier,
       item,
       quantity,
       timestamp: new Date().toISOString(),
     };
-
+  
     try {
       socket.emit('shopkeeperToSupplier', newMsg);
       await axios.post('http://localhost:5000/api/shopkeeper/chat', newMsg);
@@ -63,6 +67,7 @@ const ShopkeeperChat = () => {
       console.error('Error sending message:', err);
     }
   };
+  
 
   return (
     <div className="max-w-2xl mx-auto bg-white rounded-lg shadow-lg p-4 h-[80vh] flex flex-col">
@@ -86,7 +91,6 @@ const ShopkeeperChat = () => {
           .filter(m => m.supplierName === selectedSupplier)
           .map((m, i) => (
             <div key={i}>
-              {/* Shopkeeper Message */}
               <div className="flex justify-end">
                 <div className="bg-blue-500 text-white px-4 py-2 rounded-lg max-w-xs">
                   <div><b>{m.item} x {m.quantity}</b></div>
@@ -94,7 +98,6 @@ const ShopkeeperChat = () => {
                 </div>
               </div>
 
-              {/* Supplier Reply */}
               {m.reply && (
                 <div className="flex justify-start mt-2">
                   <div className="bg-green-100 text-black px-4 py-2 rounded-lg max-w-xs">
@@ -103,7 +106,7 @@ const ShopkeeperChat = () => {
                 </div>
               )}
             </div>
-          ))} 
+          ))}
         <div ref={messagesEndRef} />
       </div>
 

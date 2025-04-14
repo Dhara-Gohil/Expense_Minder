@@ -5,26 +5,40 @@ import axios from 'axios';
 const socket = io('http://localhost:5000');
 
 const SupplierChat = () => {
-  const [supplierName, setSupplierName] = useState('Supplier1'); // Hardcoded or use auth later
+  const [supplierName, setSupplierName] = useState('Supplier1'); 
   const [shopkeepers, setShopkeepers] = useState([]);
+  const [shopkeeperNames, setShopkeeperNames] = useState({});
   const [selectedShopkeeper, setSelectedShopkeeper] = useState('');
   const [messages, setMessages] = useState([]);
   const [reply, setReply] = useState('');
 
   // Fetch initial messages
   useEffect(() => {
-    axios.get(`http://localhost:5000/api/supplier/chat?supplierName=${supplierName}`)
-      .then(res => {
+    const fetchMessages = async () => {
+      try {
+        const res = await axios.get(`http://localhost:5000/api/supplier/chat?supplierName=${supplierName}`);
         const msgs = res.data;
         setMessages(msgs);
+
         const uniqueShopkeepers = [...new Set(msgs.map(m => m.shopkeeperName))];
         setShopkeepers(uniqueShopkeepers);
-      })
-      .catch(err => console.error('Fetch error:', err));
+
+        const shopkeeperNamesRes = await axios.get('http://localhost:5000/api/supplier/shopkeepers');
+        const namesMap = {};
+        shopkeeperNamesRes.data.forEach(shopkeeper => {
+          namesMap[shopkeeper.username] = shopkeeper.name;
+        });
+        setShopkeeperNames(namesMap);
+
+      } catch (err) {
+        console.error('Fetch error:', err);
+      }
+    };
+
+    fetchMessages();
 
     socket.on('shopkeeperToSupplier', (newMessage) => {
       if (newMessage.supplierName === supplierName) {
-        // Append new message and keep the history
         setMessages(prev => [...prev, newMessage]);
         if (!shopkeepers.includes(newMessage.shopkeeperName)) {
           setShopkeepers(prev => [...prev, newMessage.shopkeeperName]);
@@ -35,6 +49,7 @@ const SupplierChat = () => {
     return () => socket.off('shopkeeperToSupplier');
   }, [supplierName, shopkeepers]);
 
+  // Handle sending a reply
   const handleReply = async () => {
     if (!reply || !selectedShopkeeper) return;
 
@@ -45,54 +60,45 @@ const SupplierChat = () => {
       timestamp: new Date().toISOString(),
     };
 
-    // Send supplier reply to shopkeeper via socket
     socket.emit('supplierToShopkeeper', newReply);
     await axios.post('http://localhost:5000/api/supplier/chat/reply', newReply);
-
-    // Add new reply to state
     setMessages(prev => [...prev, newReply]);
     setReply('');
   };
 
-  // Filter messages for selected chat
   const chatMessages = messages.filter(m => m.shopkeeperName === selectedShopkeeper);
 
   return (
     <div className="flex h-[90vh] max-w-6xl mx-auto bg-white rounded shadow">
-      {/* Sidebar with shopkeepers */}
       <div className="w-1/3 bg-gray-100 p-4 overflow-y-auto border-r">
-        <h3 className="text-lg font-semibold mb-4">📨 Shopkeepers</h3>
-        {shopkeepers.map((name, idx) => (
+        <h3 className="text-lg font-semibold mb-4">Shopkeepers</h3>
+        {shopkeepers.map((username, idx) => (
           <div
             key={idx}
-            onClick={() => setSelectedShopkeeper(name)}
-            className={`p-2 mb-2 rounded cursor-pointer ${selectedShopkeeper === name ? 'bg-blue-500 text-white' : 'bg-white hover:bg-blue-100'}`}
+            onClick={() => setSelectedShopkeeper(username)}
+            className={`p-2 mb-2 rounded cursor-pointer ${selectedShopkeeper === username ? 'bg-blue-500 text-white' : 'bg-white hover:bg-blue-100'}`}
           >
-            {name}
+            {shopkeeperNames[username] || username}
           </div>
         ))}
       </div>
 
-      {/* Chat area */}
       <div className="flex-1 flex flex-col">
         <div className="border-b px-4 py-2 font-bold text-lg">
-          {selectedShopkeeper ? `Chat with ${selectedShopkeeper}` : 'Select a Shopkeeper'}
+          {selectedShopkeeper ? `Chat with ${shopkeeperNames[selectedShopkeeper] || selectedShopkeeper}` : 'Select a Shopkeeper'}
         </div>
 
         <div className="flex-1 p-4 overflow-y-auto space-y-2">
           {chatMessages.map((msg, idx) => (
-            <div key={idx} className="bg-gray-200 p-2 rounded">
-              {/* If it's a shopkeeper message, show item, quantity, and name */}
-              {msg.item && msg.quantity ? (
-                <div><b>{msg.shopkeeperName}:</b> {msg.item} x {msg.quantity}</div>
-              ) : (
-                // Otherwise, show just the reply message from supplier
-                <div><b>{msg.shopkeeperName}:</b> {msg.reply}</div>
+            <div key={idx} className="bg-gray-100 p-2 rounded">
+              {msg.item && msg.quantity && (
+                <div><b>{shopkeeperNames[msg.shopkeeperName] || msg.shopkeeperName}:</b> {msg.item} x {msg.quantity}</div>
               )}
-
-              {/* Show supplier's reply as plain text */}
               {msg.reply && msg.supplierName === supplierName && (
                 <div className="text-green-700 mt-1"><b>You:</b> {msg.reply}</div>
+              )}
+              {msg.reply && msg.supplierName !== supplierName && (
+                <div className="text-blue-700 mt-1"><b>{shopkeeperNames[msg.shopkeeperName] || msg.shopkeeperName}:</b> {msg.reply}</div>
               )}
             </div>
           ))}

@@ -20,7 +20,7 @@ import ExpenseReport from './pages/shopkeeperpages/ExpenseReport';
 // import SupplierReply from './pages/shopkeeperpages/SupplierReply';
 // Supplier Pages
 import ReceivedOrders from './pages/supplierpages/ReceivedOrders';
-import PendingPayments from './pages/supplierpages/PendingPayments';
+import Historysup from './pages/supplierpages/Historysup'
 import ChatWithShopkeepers from './pages/supplierpages/ChatWithShopkeepers';
 import ManageProducts from './pages/supplierpages/ManageProducts';
 import MonthlyExpense from './pages/supplierpages/MonthlyExpense';
@@ -53,7 +53,7 @@ function App() {
 
             {/* Supplier Routes */}
             <Route path="/supplier/received-orders" element={<ReceivedOrders />} />
-            <Route path="/supplier/pending-payments" element={<PendingPayments />} />
+            <Route path="/supplier/history" element={<Historysup />} />
             <Route path="/supplier/chat" element={<ChatWithShopkeepers />} />
             <Route path="/supplier/products" element={<ManageProducts />} />
             <Route path="/supplier/monthly-expense" element={<MonthlyExpense />} />

@@ -15,25 +15,31 @@ export default function LoginPage() {
       role === 'shopkeeper'
         ? 'http://localhost:5000/api/auth/login/shopkeeper'
         : 'http://localhost:5000/api/auth/login/supplier';
-
+  
     try {
       const res = await axios.post(route, formData);
       alert(res.data.message);
-
-      localStorage.setItem("token", res.data.token); // ✅ res now defined
-      window.dispatchEvent(new Event("storage")); 
-      // Navigate to dashboard based on role
+  
+      localStorage.setItem("token", res.data.token);
+      if (role === 'shopkeeper') {
+        localStorage.setItem("shopkeeperId", res.data.user._id);
+      } else {
+        localStorage.setItem("supplierId", res.data.user._id);
+      }
+      window.dispatchEvent(new Event("storage"));
+  
       if (role === 'shopkeeper') {
         navigate('/shopkeeper/dashboard');
       } else {
         navigate('/supplier/dashboard');
       }
-
+  
       setFormData({ email: '', password: '' });
     } catch (err) {
       alert(err.response?.data?.message || 'Login failed');
     }
   };
+  
 
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4 py-12">

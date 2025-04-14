@@ -13,6 +13,11 @@ const invoiceSchema = new mongoose.Schema({
   totalAmount: Number,
   invoiceNumber: String,
   date: { type: Date, default: Date.now },
+  shopkeeperId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Shopkeeper",  // Reference to the Shopkeeper model
+    required: true,
+  },
 });
 
 const Invoice = mongoose.model('Invoice', invoiceSchema);
