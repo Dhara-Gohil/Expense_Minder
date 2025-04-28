@@ -1,6 +1,12 @@
 // HomePage.jsx
 import React from 'react';
 
+const scrollDown = ()=>{
+  window.scrollTo({
+    top : document.body.scrollHeight,
+    behavior:'smooth'
+  });
+}
 export default function HomePage() {
   return (
     <main className="bg-gray-50">
@@ -8,7 +14,7 @@ export default function HomePage() {
       <section className="text-center px-6 py-20 bg-gradient-to-r from-yellow-200 to-gray-100">
         <h1 className="text-4xl md:text-5xl font-bold text-gray-800 mb-4">Manage Your Expenses Smarter</h1>
         <p className="text-lg md:text-xl mb-6 text-gray-700">Track bills, get reminders, and simplify expense management with Expense Minder.</p>
-        <a href="#" className="bg-yellow-600 text-white px-6 py-3 rounded-lg hover:bg-yellow-700 transition">Get Started</a>
+        <a href="#" className="bg-yellow-600 text-white px-6 py-3 rounded-lg hover:bg-yellow-700 transition" onClick={scrollDown}>Get Started</a>
       </section>
 
       {/* Features */}
