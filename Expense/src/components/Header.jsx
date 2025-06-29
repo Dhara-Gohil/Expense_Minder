@@ -32,7 +32,7 @@ export default function Header() {
       <a href="/pricing" className="hover:text-yellow-700 transition text-black">Pricing</a>
       <a href="/contact" className="hover:text-yellow-700 transition text-black">Contact</a>
       <a href="/signup" className="hover:text-yellow-700 transition text-black">Sign Up</a>
-      <a href="/login" className="hover:text-yellow-700 transition text-black">Login</a>
+      {/* <a href="/login" className="hover:text-yellow-700 transition text-black">Login</a> */}
     </>
   );
 
@@ -83,7 +83,7 @@ export default function Header() {
             <a href="/pricing" className="block py-2 text-base font-medium hover:text-yellow-700 transition duration-200">Pricing</a>
             <a href="/contact" className="block py-2 text-base font-medium hover:text-yellow-700 transition duration-200">Contact</a>
             <a href="/signup" className="block py-2 text-base font-medium hover:text-yellow-700 transition duration-200">Sign Up</a>
-            <a href="/login" className="block py-2 text-base font-medium hover:text-yellow-700 transition duration-200">Login</a>
+            {/* <a href="/login" className="block py-2 text-base font-medium hover:text-yellow-700 transition duration-200">Login</a> */}
           </>
         )}
       </div>

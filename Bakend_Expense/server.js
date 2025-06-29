@@ -16,7 +16,7 @@ import chatRoutes from './routes/chatRoutes.js';
 import shopkeeperRoutes from './routes/Shopkeeper/shopkeeperRoutes.js';
 
 
-
+import contactRoutes from './routes/contactRoutes.js';
 
 
 dotenv.config();
@@ -62,6 +62,7 @@ app.use('/api/supplier', supplierProductRoutes);
 app.use('/api/supplier/invoice', invoiceRoutes);
 app.use('/api/supplier/chat', chatRoutes);
 app.use('/api/Shopkeeper/chat', chatRoutes);
+app.use('/api/contact', contactRoutes);
 //app.use('/api/supplier/chat', supplierChatRoutes);
 
 const PORT = process.env.PORT || 5000;
