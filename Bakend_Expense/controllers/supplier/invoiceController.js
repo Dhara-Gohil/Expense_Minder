@@ -38,30 +38,24 @@ export const getInvoices = async (req, res) => {
 // Get Invoices for Specific Shopkeeper
   // Path to your Invoice model
 
+
 export const getShopkeeperInvoices = async (req, res) => {
-  const shopkeeperId = req.query.shopkeeperId;
+  const { shopkeeperId } = req.query;
 
   if (!shopkeeperId) {
     return res.status(400).json({ message: "Shopkeeper ID is required" });
   }
 
+  if (!mongoose.Types.ObjectId.isValid(shopkeeperId)) {
+    return res.status(400).json({ message: "Invalid Shopkeeper ID format" });
+  }
+
   try {
-    // Convert shopkeeperId to ObjectId
-    const objectIdShopkeeperId = new mongoose.Types.ObjectId(shopkeeperId);
+    const invoices = await Invoice.find({ shopkeeperId }).sort({ createdAt: -1 });
 
-    // Find invoices and populate the shopkeeperId field
-    const invoices = await Invoice.find({ shopkeeperId: objectIdShopkeeperId })
-      .populate('shopkeeperId')  // Populate the shopkeeper details
-      .sort({ date: -1 });
-
-    if (!invoices || invoices.length === 0) {
-      return res.status(404).json({ message: "No invoices found for this shopkeeper" });
-    }
-
-    res.json(invoices);  // Send the fetched invoices as response
-  } catch (error) {
-    console.error("Error fetching shopkeeper invoices:", error.message);
-    res.status(500).json({ message: "Error fetching shopkeeper invoices", error: error.message });
+    res.status(200).json(invoices);
+  } catch (err) {
+    console.error("Error:", err.message);
+    res.status(500).json({ message: "Server error", error: err.message });
   }
 };
-

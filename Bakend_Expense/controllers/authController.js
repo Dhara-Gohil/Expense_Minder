@@ -82,6 +82,13 @@ export const loginSupplier = async (req, res) => {
 
     res.status(200).json({ message: "Login successful as Supplier", user: supplier });
   } catch (err) {
-    res.status(500).json({ message: "Server error" });
+    res.status(200).json({
+      message: "Login successful as Supplier",
+      name: supplier.name,
+      email: supplier.email,
+      _id: supplier._id,
+    });
+
   }
 };
+

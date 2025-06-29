@@ -14,13 +14,16 @@ export default function BillGeneration() {
   const [selectedItems, setSelectedItems] = useState([]);
   const [selectedProduct, setSelectedProduct] = useState('');
   const [quantity, setQuantity] = useState('');
-  const [supplierName, setSupplierName] = useState('');
-  const [email, setEmail] = useState('');
+  const [shopkeepers, setShopkeepers] = useState([]);
+  const [selectedShopkeeperId, setSelectedShopkeeperId] = useState('');
+  const [shopkeeperName, setShopkeeperName] = useState('');
+  const [shopkeeperEmail, setShopkeeperEmail] = useState('');
   const [showInvoice, setShowInvoice] = useState(false);
   const [storedBills, setStoredBills] = useState([]);
 
   useEffect(() => {
     fetchStoredBills();
+    fetchShopkeepers();
   }, []);
 
   const fetchStoredBills = async () => {
@@ -32,25 +35,52 @@ export default function BillGeneration() {
     }
   };
 
-  const addToBill = () => {
-    const product = products.find(p => p.name === selectedProduct);
-    if (!product || !quantity) return;
+  const fetchShopkeepers = async () => {
+    try {
+      const res = await axios.get('http://localhost:5000/api/supplier/shopkeepers');
+      setShopkeepers(res.data);
+    } catch (err) {
+      console.error('Failed to fetch shopkeepers:', err);
+    }
+  };
 
-    const existing = selectedItems.find(item => item.name === product.name);
+  const handleShopkeeperSelect = (e) => {
+    const id = e.target.value;
+    setSelectedShopkeeperId(id);
+
+    const selected = shopkeepers.find(s => s.id === id); // ✅ use s.id not s._id
+    if (selected) {
+      setShopkeeperName(selected.name);
+      setShopkeeperEmail(selected.email); // ✅ Email auto-set
+    }
+  };
+
+
+ const addToBill = () => {
+  if (!selectedProduct || !quantity) return;
+
+  const product = products.find(p => p.name === selectedProduct);
+  const qty = parseInt(quantity);
+
+  if (!product || isNaN(qty) || qty <= 0) return;
+
+  setSelectedItems(prevItems => {
+    const existing = prevItems.find(item => item.name === product.name);
     if (existing) {
-      const updated = selectedItems.map(item =>
+      return prevItems.map(item =>
         item.name === product.name
-          ? { ...item, quantity: item.quantity + parseInt(quantity) }
+          ? { ...item, quantity: item.quantity + qty }
           : item
       );
-      setSelectedItems(updated);
     } else {
-      setSelectedItems([...selectedItems, { ...product, quantity: parseInt(quantity) }]);
+      return [...prevItems, { ...product, quantity: qty }];
     }
+  });
 
-    setSelectedProduct('');
-    setQuantity('');
-  };
+  setSelectedProduct('');
+  setQuantity('');
+};
+
 
   const totalAmount = selectedItems.reduce(
     (sum, item) => sum + item.price * item.quantity,
@@ -58,28 +88,25 @@ export default function BillGeneration() {
   );
 
   const generateInvoice = () => {
-  if (!supplierName || !email || selectedItems.length === 0) {
-    alert("Please fill all fields and add at least one item before generating the invoice.");
-    return;
-  }
+    if (!selectedShopkeeperId || !shopkeeperName || !shopkeeperEmail || selectedItems.length === 0) {
+      alert("Please select a shopkeeper and add products to generate invoice.");
+      return;
+    }
 
-  setShowInvoice(true);         // ✅ Show Download Invoice button
-  saveInvoiceToBackend();       // ✅ Save the invoice to backend
-};
-
+    setShowInvoice(true);
+    saveInvoiceToBackend();
+  };
 
   const downloadInvoice = () => {
     const doc = new jsPDF();
-
     doc.setFontSize(18);
     doc.text('Invoice', 14, 20);
 
     doc.setFontSize(12);
-    doc.text(`Supplier: ${supplierName}`, 14, 30);
-    doc.text(`Email: ${email}`, 14, 36);
-    const date = new Date().toLocaleDateString('en-IN'); // Safe for PDF
+    doc.text(`Shopkeeper: ${shopkeeperName}`, 14, 30);
+    doc.text(`Email: ${shopkeeperEmail}`, 14, 36);
+    const date = new Date().toLocaleDateString('en-IN');
     doc.text(`Date: ${date}`, 14, 42);
-
     doc.text(`Invoice No: INV-${Date.now().toString().slice(-6)}`, 14, 48);
 
     const tableData = selectedItems.map(item => [
@@ -97,20 +124,16 @@ export default function BillGeneration() {
     });
 
     doc.text(`Grand Total: ₹${totalAmount}`, 14, doc.lastAutoTable.finalY + 10);
-    doc.save(`Invoice_${supplierName.replace(/\s/g, '_')}.pdf`);
-
-   
+    doc.save(`Invoice_${shopkeeperName.replace(/\s/g, '_')}.pdf`);
   };
 
   const saveInvoiceToBackend = async () => {
     try {
-      const shopkeeperId = localStorage.getItem('shopkeeperId'); // ✅ or get from context/auth
-
       const invoicePayload = {
-        supplierName,
-        email,
+        supplierName: shopkeeperName,
+        email: shopkeeperEmail,
         totalAmount,
-        shopkeeperId, // ✅ pass it dynamically
+        shopkeeperId: selectedShopkeeperId,
         items: selectedItems.map(item => ({
           name: item.name,
           price: item.price,
@@ -118,47 +141,42 @@ export default function BillGeneration() {
         })),
       };
 
-
       await axios.post('http://localhost:5000/api/supplier/invoice/create', invoicePayload);
       fetchStoredBills();
-
       setSelectedItems([]);
-      setSupplierName('');
-      setEmail('');
-     
     } catch (err) {
       console.error('Error saving invoice:', err);
-
-      if (err.response) {
-        console.error('Response Data:', err.response.data);
-        console.error('Status Code:', err.response.status);
-      } else if (err.request) {
-        console.error('No Response:', err.request);
-      } else {
-        console.error('Error Message:', err.message);
-      }
     }
-
   };
 
   return (
     <div className="max-w-5xl mx-auto p-6 bg-white shadow-md rounded-xl mt-10">
       <h1 className="text-3xl font-bold text-center text-blue-600 mb-6">Bill Generation</h1>
 
-      <div className="grid md:grid-cols-2 gap-6 mb-6">
-        <input
-          type="text"
-          placeholder="Supplier Name"
+      <div className="mb-6">
+        <label className="block mb-1 font-medium">Select Shopkeeper</label>
+        <select
+          value={selectedShopkeeperId}
+          onChange={handleShopkeeperSelect}
           className="border rounded px-4 py-2 w-full"
-          value={supplierName}
-          onChange={(e) => setSupplierName(e.target.value)}
-        />
+        >
+          <option value="">-- Select Shopkeeper --</option>
+          {shopkeepers.map(shop => (
+            <option key={shop.id} value={shop.id}>
+              {shop.name}
+            </option>
+          ))}
+        </select>
+
+      </div>
+
+      <div className="grid md:grid-cols-2 gap-6 mb-6">
+
         <input
           type="email"
-          placeholder="Supplier Email"
-          className="border rounded px-4 py-2 w-full"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          className="border rounded px-4 py-2 w-full bg-gray-100"
+          value={shopkeeperEmail}
+          readOnly
         />
       </div>
 
@@ -245,7 +263,7 @@ export default function BillGeneration() {
             <thead>
               <tr className="bg-gray-200 text-gray-700">
                 <th className="border px-4 py-2">Invoice No</th>
-                <th className="border px-4 py-2">Supplier</th>
+                <th className="border px-4 py-2">Shopkeeper</th>
                 <th className="border px-4 py-2">Email</th>
                 <th className="border px-4 py-2">Total</th>
                 <th className="border px-4 py-2">Date</th>
@@ -254,14 +272,13 @@ export default function BillGeneration() {
             <tbody>
               {storedBills.map((bill, index) => (
                 <tr key={index} className="hover:bg-white">
-                  <td className="border px-4 py-2">INV-{index + 1}</td>
+                  <td className="border px-4 py-2">{bill.invoiceNumber || `INV-${index + 1}`}</td>
                   <td className="border px-4 py-2">{bill.supplierName}</td>
                   <td className="border px-4 py-2">{bill.email}</td>
                   <td className="border px-4 py-2">₹{bill.totalAmount}</td>
                   <td className="border px-4 py-2">
                     {new Date(bill.createdAt).toLocaleDateString('en-IN')}
                   </td>
-
                 </tr>
               ))}
             </tbody>

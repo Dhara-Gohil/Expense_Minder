@@ -1,5 +1,5 @@
-// import React, { useEffect, useState } from "react";
-// import axios from "axios";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 
 // const History = () => {
 //   const [bills, setBills] = useState([]);
@@ -93,69 +93,41 @@
 // export default History;
 
 
-import React, { useEffect, useState } from "react";
+
 
 // Fake Data for demonstration purposes
-const fakeBills = [
-  {
-    _id: "1",
-    supplierName: "Dhara",
-    date: "2025-04-01",
-    items: [
-      { name: "Ciment bags", quantity: 2, price: 100 },
-      { name: "Table", quantity: 1, price: 150 },
-    ],
-    totalAmount: 350,
-  },
-  {
-    _id: "2",
-    supplierName: "Dhara",
-    date: "2025-04-05",
-    items: [
-      { name: "Chair", quantity: 3, price: 50 },
-      { name: "Windows", quantity: 2, price: 200 },
-    ],
-    totalAmount: 650,
-  },
-  {
-    _id: "3",
-    supplierName: "Dhara",
-    date: "2025-04-10",
-    items: [
-      { name: "Doors", quantity: 1, price: 300 },
-      { name: "Windows", quantity: 4, price: 50 },
-    ],
-    totalAmount: 500,
-  },
-];
 
 const History = () => {
   const [bills, setBills] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error] = useState(null);
+  const [error, setError] = useState(null);
+
   const shopkeeperId = localStorage.getItem("shopkeeperId");
 
   useEffect(() => {
-    // For now, using fake data
-    setBills(fakeBills);
-    setLoading(false);
+    const fetchBills = async () => {
+      if (!shopkeeperId) {
+        setError("No shopkeeper ID found!");
+        setLoading(false);
+        return;
+      }
 
-    // Simulate an API call (uncomment when using real backend)
-    // const fetchBills = async () => {
-    //   try {
-    //     const response = await axios.get(
-    //       `http://localhost:5000/api/supplier/invoice/shopkeeper?shopkeeperId=${shopkeeperId}`
-    //     );
-    //     setBills(response.data);
-    //   } catch (error) {
-    //     setError("Failed to fetch bills. Please try again later.");
-    //     console.error("Error fetching bills:", error);
-    //   } finally {
-    //     setLoading(false);
-    //   }
-    // };
-    // fetchBills();  // Call the fetchBills function
+      try {
+        const response = await axios.get(
+          `http://localhost:5000/api/supplier/invoice/shopkeeper?shopkeeperId=${shopkeeperId}`
+        );
+        setBills(response.data);
+      } catch (error) {
+        setError("Failed to fetch bills. Please try again later.");
+        console.error("Error fetching bills:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchBills(); // 🔄 Call the real fetch
   }, [shopkeeperId]);
+
 
   // Loading state
   if (loading) {
@@ -190,12 +162,18 @@ const History = () => {
               key={bill._id}
               className="border rounded-lg shadow-md p-6 bg-white hover:shadow-xl transition duration-300"
             >
-              <h3 className="text-xl font-semibold text-gray-700">
-                Supplier: {bill.supplierName}
+              {/* <h3 className="text-xl font-semibold text-gray-700">
+                Shopkeeper: {bill.shopkeeperId?.name}
               </h3>
               <p className="text-sm text-gray-500">
-                Date: {new Date(bill.date).toLocaleDateString()}
+                Email: {bill.shopkeeperId?.email}
+              </p> */}
+
+              <p className="text-sm text-gray-500">
+                Date: {bill.createdAt ? new Date(bill.createdAt).toLocaleDateString('en-IN') : 'N/A'}
               </p>
+
+
 
               <ul className="mt-4 space-y-3">
                 {bill.items.map((item, index) => (
