@@ -6,7 +6,7 @@ export default function ShopkeeperDashboard() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const navigate = useNavigate();
 
-  const shopkeeperName = 'Dhara Traders';
+ const shopkeeperName = localStorage.getItem("shopkeeperName") || "Shopkeeper";
 
   const features = [
     {

@@ -6,7 +6,8 @@ export default function SupplierDashboard() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const navigate = useNavigate();
 
-  const supplierName = 'Ravi Suppliers';
+  const supplierName = localStorage.getItem("supplierName") || "Supplier";
+
 
   const features = [
     {

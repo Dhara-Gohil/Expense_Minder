@@ -75,20 +75,30 @@ export const loginSupplier = async (req, res) => {
 
   try {
     const supplier = await Supplier.findOne({ email });
+
+    console.log("📦 Found:", supplier); // ADD THIS
+
     if (!supplier) return res.status(404).json({ message: "Supplier not found" });
 
     const isMatch = await bcrypt.compare(password, supplier.password);
     if (!isMatch) return res.status(401).json({ message: "Invalid credentials" });
 
-    res.status(200).json({ message: "Login successful as Supplier", user: supplier });
-  } catch (err) {
+    const token = jwt.sign({ id: supplier._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+
     res.status(200).json({
       message: "Login successful as Supplier",
-      name: supplier.name,
-      email: supplier.email,
-      _id: supplier._id,
+      user: {
+        _id: supplier._id,
+        name: supplier.name,
+        email: supplier.email,
+        companyName: supplier.companyName,
+      },
+      token,
     });
-
+  } catch (err) {
+    console.error("❌ Supplier Login Error:", err); // Important
+    res.status(500).json({ message: "Server error" });
   }
 };
+
 
