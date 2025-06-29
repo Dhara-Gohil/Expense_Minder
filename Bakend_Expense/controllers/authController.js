@@ -4,7 +4,7 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 
-dotenv.config()
+dotenv.config();
 
 // Shopkeeper Signup
 export const signupShopkeeper = async (req, res) => {
@@ -45,8 +45,6 @@ export const signupSupplier = async (req, res) => {
 };
 
 // Login as Shopkeeper
-//  // make sure this is imported at the top
-
 export const loginShopkeeper = async (req, res) => {
   const { email, password } = req.body;
 
@@ -57,17 +55,19 @@ export const loginShopkeeper = async (req, res) => {
     const isMatch = await bcrypt.compare(password, shopkeeper.password);
     if (!isMatch) return res.status(401).json({ message: "Invalid credentials" });
 
-    // ✅ Generate token using the secret key from .env
-    const token = jwt.sign({ id: shopkeeper._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+    const token = jwt.sign({ id: shopkeeper._id, userType: "shopkeeper" }, process.env.JWT_SECRET, { expiresIn: '1h' });
 
-    res.status(200).json({ message: "Login successful as Shopkeeper", user: shopkeeper, token });
+    res.status(200).json({
+      message: "Login successful as Shopkeeper",
+      user: shopkeeper,
+      token,
+      userType: "shopkeeper"
+    });
   } catch (err) {
     console.log("Login error:", err);
     res.status(500).json({ message: "Server error" });
   }
 };
-
-
 
 // Login as Supplier
 export const loginSupplier = async (req, res) => {
@@ -75,30 +75,20 @@ export const loginSupplier = async (req, res) => {
 
   try {
     const supplier = await Supplier.findOne({ email });
-
-    console.log("📦 Found:", supplier); // ADD THIS
-
     if (!supplier) return res.status(404).json({ message: "Supplier not found" });
 
     const isMatch = await bcrypt.compare(password, supplier.password);
     if (!isMatch) return res.status(401).json({ message: "Invalid credentials" });
 
-    const token = jwt.sign({ id: supplier._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+    const token = jwt.sign({ id: supplier._id, userType: "supplier" }, process.env.JWT_SECRET, { expiresIn: '1h' });
 
     res.status(200).json({
       message: "Login successful as Supplier",
-      user: {
-        _id: supplier._id,
-        name: supplier.name,
-        email: supplier.email,
-        companyName: supplier.companyName,
-      },
+      user: supplier,
       token,
+      userType: "supplier"
     });
   } catch (err) {
-    console.error("❌ Supplier Login Error:", err); // Important
     res.status(500).json({ message: "Server error" });
   }
 };
-
-
