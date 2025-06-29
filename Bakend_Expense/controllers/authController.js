@@ -58,7 +58,7 @@ export const loginShopkeeper = async (req, res) => {
     if (!isMatch) return res.status(401).json({ message: "Invalid credentials" });
 
     // ✅ Generate token using the secret key from .env
-    const token = jwt.sign({ id: shopkeeper._id }, process.env.JWT_SECRET, { expiresIn: '1d' });
+    const token = jwt.sign({ id: shopkeeper._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
 
     res.status(200).json({ message: "Login successful as Shopkeeper", user: shopkeeper, token });
   } catch (err) {

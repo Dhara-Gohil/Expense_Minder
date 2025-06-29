@@ -58,9 +58,15 @@ export default function BillGeneration() {
   );
 
   const generateInvoice = () => {
-    if (!supplierName || !email || selectedItems.length === 0) return;
-    setShowInvoice(true);
-  };
+  if (!supplierName || !email || selectedItems.length === 0) {
+    alert("Please fill all fields and add at least one item before generating the invoice.");
+    return;
+  }
+
+  setShowInvoice(true);         // ✅ Show Download Invoice button
+  saveInvoiceToBackend();       // ✅ Save the invoice to backend
+};
+
 
   const downloadInvoice = () => {
     const doc = new jsPDF();
@@ -71,7 +77,9 @@ export default function BillGeneration() {
     doc.setFontSize(12);
     doc.text(`Supplier: ${supplierName}`, 14, 30);
     doc.text(`Email: ${email}`, 14, 36);
-    doc.text(`Date: ${new Date().toLocaleDateString()}`, 14, 42);
+    const date = new Date().toLocaleDateString('en-IN'); // Safe for PDF
+    doc.text(`Date: ${date}`, 14, 42);
+
     doc.text(`Invoice No: INV-${Date.now().toString().slice(-6)}`, 14, 48);
 
     const tableData = selectedItems.map(item => [
@@ -91,15 +99,18 @@ export default function BillGeneration() {
     doc.text(`Grand Total: ₹${totalAmount}`, 14, doc.lastAutoTable.finalY + 10);
     doc.save(`Invoice_${supplierName.replace(/\s/g, '_')}.pdf`);
 
-    saveInvoiceToBackend();
+   
   };
 
   const saveInvoiceToBackend = async () => {
     try {
+      const shopkeeperId = localStorage.getItem('shopkeeperId'); // ✅ or get from context/auth
+
       const invoicePayload = {
         supplierName,
         email,
         totalAmount,
+        shopkeeperId, // ✅ pass it dynamically
         items: selectedItems.map(item => ({
           name: item.name,
           price: item.price,
@@ -107,16 +118,27 @@ export default function BillGeneration() {
         })),
       };
 
+
       await axios.post('http://localhost:5000/api/supplier/invoice/create', invoicePayload);
       fetchStoredBills();
 
       setSelectedItems([]);
       setSupplierName('');
       setEmail('');
-      setShowInvoice(false);
+     
     } catch (err) {
       console.error('Error saving invoice:', err);
+
+      if (err.response) {
+        console.error('Response Data:', err.response.data);
+        console.error('Status Code:', err.response.status);
+      } else if (err.request) {
+        console.error('No Response:', err.request);
+      } else {
+        console.error('Error Message:', err.message);
+      }
     }
+
   };
 
   return (
@@ -237,8 +259,9 @@ export default function BillGeneration() {
                   <td className="border px-4 py-2">{bill.email}</td>
                   <td className="border px-4 py-2">₹{bill.totalAmount}</td>
                   <td className="border px-4 py-2">
-                    {new Date(bill.createdAt).toLocaleDateString()}
+                    {new Date(bill.createdAt).toLocaleDateString('en-IN')}
                   </td>
+
                 </tr>
               ))}
             </tbody>

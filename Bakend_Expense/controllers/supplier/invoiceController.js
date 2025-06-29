@@ -19,10 +19,10 @@ export const createInvoice = async (req, res) => {
 
     await invoice.save();
     res.status(201).json({ message: 'Invoice created successfully', invoice });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: 'Failed to create invoice' });
-  }
+  }catch (err) {
+  console.error('❌ Failed to create invoice:', err); // change here
+  res.status(500).json({ error: 'Failed to create invoice', details: err.message });
+}
 };
 
 // Get All Invoices (Supplier-side)
