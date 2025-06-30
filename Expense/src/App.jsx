@@ -25,6 +25,7 @@ import ChatWithShopkeepers from './pages/supplierpages/ChatWithShopkeepers';
 import ManageProducts from './pages/supplierpages/ManageProducts';
 import MonthlyExpense from './pages/supplierpages/MonthlyExpense';
 import BillGeneration from './pages/supplierpages/BillGeneration';
+import SupplierReminders from './pages/supplierpages/SupplierReminders';
 
 function App() {
   return (
@@ -58,6 +59,7 @@ function App() {
             <Route path="/supplier/products" element={<ManageProducts />} />
             <Route path="/supplier/monthly-expense" element={<MonthlyExpense />} />
             <Route path="/supplier/bill-generation" element={<BillGeneration />} />
+            <Route path="/supplier/Reminders" element={<SupplierReminders />} />
           </Routes>
         </main>
         <Footer />

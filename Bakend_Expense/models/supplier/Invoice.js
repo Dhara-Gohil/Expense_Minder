@@ -1,3 +1,4 @@
+// models/supplier/Invoice.js
 import mongoose from 'mongoose';
 
 const itemSchema = new mongoose.Schema({
@@ -12,6 +13,11 @@ const invoiceSchema = new mongoose.Schema({
   items: [itemSchema],
   totalAmount: Number,
   invoiceNumber: String,
+  paymentStatus: {
+    type: String,
+    enum: ['Paid', 'Unpaid'],
+    default: 'Unpaid'
+  },
   shopkeeperId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Shopkeeper",

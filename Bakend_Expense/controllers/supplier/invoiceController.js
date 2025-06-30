@@ -15,6 +15,7 @@ export const createInvoice = async (req, res) => {
       totalAmount,
       invoiceNumber,
       shopkeeperId,
+       paymentStatus: "Unpaid",
     });
 
     await invoice.save();
@@ -24,6 +25,34 @@ export const createInvoice = async (req, res) => {
   res.status(500).json({ error: 'Failed to create invoice', details: err.message });
 }
 };
+
+// controllers/invoiceController.js
+
+export const markInvoiceAsPaid = async (req, res) => {
+  const { invoiceId } = req.params;
+
+  if (!mongoose.Types.ObjectId.isValid(invoiceId)) {
+    return res.status(400).json({ message: "Invalid invoice ID" });
+  }
+
+  try {
+    const updatedInvoice = await Invoice.findByIdAndUpdate(
+      invoiceId,
+      { paymentStatus: "Paid" },
+      { new: true }
+    );
+
+    if (!updatedInvoice) {
+      return res.status(404).json({ message: "Invoice not found" });
+    }
+
+    res.status(200).json({ message: "Invoice marked as paid", invoice: updatedInvoice });
+  } catch (err) {
+    console.error("Error updating invoice:", err.message);
+    res.status(500).json({ message: "Server error", error: err.message });
+  }
+};
+
 
 // Get All Invoices (Supplier-side)
 export const getInvoices = async (req, res) => {

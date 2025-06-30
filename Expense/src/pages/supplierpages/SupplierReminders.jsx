@@ -3,40 +3,37 @@ import axios from 'axios';
 
 export default function Reminders() {
   const [reminders, setReminders] = useState([]);
-  const shopkeeperId = localStorage.getItem("shopkeeperId");
 
   useEffect(() => {
-    if (shopkeeperId) {
-      fetchReminders();
-    }
-  }, [shopkeeperId]);
+    fetchReminders();
+  }, []);
 
   const fetchReminders = async () => {
     try {
-      const res = await axios.get(`http://localhost:5000/api/supplier/invoice/shopkeeper?shopkeeperId=${shopkeeperId}`);
-      const bills = res.data;
+      const res = await axios.get("http://localhost:5000/api/supplier/invoice/all");
+      const allBills = res.data;
 
       const now = new Date();
 
-      // Filter: Unpaid and older than 7 days
-      const overdue = bills.filter(bill => {
-        const billDate = new Date(bill.createdAt);
-        const diffDays = Math.floor((now - billDate) / (1000 * 60 * 60 * 24));
-        return bill.paymentStatus !== "Paid" && diffDays > 7;
+      const filtered = allBills.filter(bill => {
+        return (
+          bill.paymentStatus !== "Paid" &&
+          new Date(bill.createdAt) < new Date(now.setDate(now.getDate() - 7))
+        );
       });
 
-      setReminders(overdue);
+      setReminders(filtered);
     } catch (err) {
-      console.error("❌ Reminder Fetch Error:", err);
+      console.error("Failed to fetch reminders:", err);
     }
   };
 
   return (
     <div className="p-8">
-      <h1 className="text-2xl font-bold mb-6 text-yellow-600">🔔 Your Pending Bill Reminders</h1>
+      <h1 className="text-2xl font-bold mb-6 text-yellow-600">🔔 Pending Bill Reminders</h1>
 
       {reminders.length === 0 ? (
-        <p className="text-gray-500">No overdue unpaid bills yet 🎉</p>
+        <p className="text-gray-500">No pending reminders older than 7 days.</p>
       ) : (
         <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
           {reminders.map((reminder) => (

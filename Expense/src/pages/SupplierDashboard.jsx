@@ -60,6 +60,7 @@ export default function SupplierDashboard() {
           <button onClick={() => navigate('/supplier/chat')} className="text-left px-4 py-2 rounded-lg hover:bg-blue-100 transition font-medium">Chat with Shopkeepers</button>
           <button onClick={() => navigate('/supplier/monthly-expense')} className="text-left px-4 py-2 rounded-lg hover:bg-blue-100 transition font-medium">Monthly Expense</button>
           <button onClick={() => navigate('/supplier/bill-generation')} className="text-left px-4 py-2 rounded-lg hover:bg-blue-100 transition font-medium">Bill Generation</button>
+          <button onClick={() => navigate('/supplier/Reminders')} className="text-left px-4 py-2 rounded-lg hover:bg-blue-100 transition font-medium">Reminder Section</button>
         </nav>
       </aside>
 

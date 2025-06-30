@@ -20,6 +20,7 @@ export default function BillGeneration() {
   const [shopkeeperEmail, setShopkeeperEmail] = useState('');
   const [showInvoice, setShowInvoice] = useState(false);
   const [storedBills, setStoredBills] = useState([]);
+  // const [paymentStatusMap, setPaymentStatusMap] = useState({}); // ✅ for local status
 
   useEffect(() => {
     fetchStoredBills();
@@ -51,36 +52,34 @@ export default function BillGeneration() {
     const selected = shopkeepers.find(s => s.id === id); // ✅ use s.id not s._id
     if (selected) {
       setShopkeeperName(selected.name);
-      setShopkeeperEmail(selected.email); // ✅ Email auto-set
+      setShopkeeperEmail(selected.email);
     }
   };
 
+  const addToBill = () => {
+    if (!selectedProduct || !quantity) return;
 
- const addToBill = () => {
-  if (!selectedProduct || !quantity) return;
+    const product = products.find(p => p.name === selectedProduct);
+    const qty = parseInt(quantity);
 
-  const product = products.find(p => p.name === selectedProduct);
-  const qty = parseInt(quantity);
+    if (!product || isNaN(qty) || qty <= 0) return;
 
-  if (!product || isNaN(qty) || qty <= 0) return;
+    setSelectedItems(prevItems => {
+      const existing = prevItems.find(item => item.name === product.name);
+      if (existing) {
+        return prevItems.map(item =>
+          item.name === product.name
+            ? { ...item, quantity: item.quantity + qty }
+            : item
+        );
+      } else {
+        return [...prevItems, { ...product, quantity: qty }];
+      }
+    });
 
-  setSelectedItems(prevItems => {
-    const existing = prevItems.find(item => item.name === product.name);
-    if (existing) {
-      return prevItems.map(item =>
-        item.name === product.name
-          ? { ...item, quantity: item.quantity + qty }
-          : item
-      );
-    } else {
-      return [...prevItems, { ...product, quantity: qty }];
-    }
-  });
-
-  setSelectedProduct('');
-  setQuantity('');
-};
-
+    setSelectedProduct('');
+    setQuantity('');
+  };
 
   const totalAmount = selectedItems.reduce(
     (sum, item) => sum + item.price * item.quantity,
@@ -149,6 +148,18 @@ export default function BillGeneration() {
     }
   };
 
+  const handleMarkAsPaid = async (invoiceId) => {
+    try {
+      await axios.put(`http://localhost:5000/api/supplier/invoice/mark-paid/${invoiceId}`);
+      // ✅ Refresh the bills after update
+      fetchStoredBills();
+    } catch (err) {
+      console.error("Failed to mark as paid:", err);
+      alert("Failed to update payment status.");
+    }
+  };
+
+
   return (
     <div className="max-w-5xl mx-auto p-6 bg-white shadow-md rounded-xl mt-10">
       <h1 className="text-3xl font-bold text-center text-blue-600 mb-6">Bill Generation</h1>
@@ -167,11 +178,9 @@ export default function BillGeneration() {
             </option>
           ))}
         </select>
-
       </div>
 
       <div className="grid md:grid-cols-2 gap-6 mb-6">
-
         <input
           type="email"
           className="border rounded px-4 py-2 w-full bg-gray-100"
@@ -267,6 +276,7 @@ export default function BillGeneration() {
                 <th className="border px-4 py-2">Email</th>
                 <th className="border px-4 py-2">Total</th>
                 <th className="border px-4 py-2">Date</th>
+                <th className="border px-4 py-2">Payment Status</th>
               </tr>
             </thead>
             <tbody>
@@ -278,6 +288,21 @@ export default function BillGeneration() {
                   <td className="border px-4 py-2">₹{bill.totalAmount}</td>
                   <td className="border px-4 py-2">
                     {new Date(bill.createdAt).toLocaleDateString('en-IN')}
+                  </td>
+                  <td className="border px-4 py-2">
+                    <span className={`px-2 py-1 rounded ${bill.paymentStatus === 'Paid' ? 'bg-green-200 text-green-800' : 'bg-red-200 text-red-800'}`}>
+                      {bill.paymentStatus || 'Unpaid'}
+                    </span>
+                  </td>
+                  <td className="border px-4 py-2">
+                    {bill.paymentStatus !== 'Paid' && (
+                      <button
+                        onClick={() => handleMarkAsPaid(bill._id)}
+                        className="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600"
+                      >
+                        Mark as Paid
+                      </button>
+                    )}
                   </td>
                 </tr>
               ))}
