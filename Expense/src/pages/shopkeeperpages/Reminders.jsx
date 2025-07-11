@@ -19,11 +19,21 @@ export default function Reminders() {
       const now = new Date();
 
       // Filter: Unpaid and older than 7 days
+<<<<<<< HEAD
       const overdue = bills.filter(bill => {
         const billDate = new Date(bill.createdAt);
         const diffDays = Math.floor((now - billDate) / (1000 * 60 * 60 * 24));
         return bill.paymentStatus !== "Paid" && diffDays > 7;
       });
+=======
+      // const overdue = bills.filter(bill => {
+      //   const billDate = new Date(bill.createdAt);
+      //   const diffDays = Math.floor((now - billDate) / (1000 * 60 * 60 * 24));
+      //   return bill.paymentStatus !== "Paid" && diffDays > 7;
+      // });
+
+      const overdue = bills.filter(bill => bill.paymentStatus !== "Paid");
+>>>>>>> 11a971a (latest commit , added few changes like email related , etc)
 
       setReminders(overdue);
     } catch (err) {

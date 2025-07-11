@@ -1,7 +1,14 @@
 import Invoice from '../../models/supplier/Invoice.js';
 import mongoose from 'mongoose';
+<<<<<<< HEAD
 
 // Create Invoice
+=======
+import { generateInvoicePdfBuffer } from '../../utils/generateInvoicePdf.js';
+import transporter from '../../config/nodemailer.js';
+
+// Create Invoice and Email PDF
+>>>>>>> 11a971a (latest commit , added few changes like email related , etc)
 export const createInvoice = async (req, res) => {
   try {
     const { supplierName, email, items, totalAmount, shopkeeperId } = req.body;
@@ -15,6 +22,7 @@ export const createInvoice = async (req, res) => {
       totalAmount,
       invoiceNumber,
       shopkeeperId,
+<<<<<<< HEAD
        paymentStatus: "Unpaid",
     });
 
@@ -28,6 +36,39 @@ export const createInvoice = async (req, res) => {
 
 // controllers/invoiceController.js
 
+=======
+      paymentStatus: "Unpaid",
+    });
+
+    await invoice.save();
+
+    // Generate PDF buffer
+    const pdfBuffer = await generateInvoicePdfBuffer(invoice);
+
+    // Send email with PDF attached
+    await transporter.sendMail({
+      from: '"Expense Minder" <no-reply@expenseminder.com>',
+      to: email,
+      subject: `Invoice ${invoiceNumber} from ${supplierName}`,
+      text: `Hello,\n\nPlease find attached the invoice ${invoiceNumber}.\n\nThank you.`,
+      attachments: [
+        {
+          filename: `Invoice_${supplierName.replace(/\s/g, '_')}.pdf`,
+          content: pdfBuffer,
+          contentType: 'application/pdf'
+        }
+      ]
+    });
+
+    res.status(201).json({ message: 'Invoice created and emailed successfully', invoice });
+  } catch (err) {
+    console.error('❌ Failed to create and email invoice:', err);
+    res.status(500).json({ error: 'Failed to create and email invoice', details: err.message });
+  }
+};
+
+// Mark invoice as paid
+>>>>>>> 11a971a (latest commit , added few changes like email related , etc)
 export const markInvoiceAsPaid = async (req, res) => {
   const { invoiceId } = req.params;
 
@@ -53,8 +94,12 @@ export const markInvoiceAsPaid = async (req, res) => {
   }
 };
 
+<<<<<<< HEAD
 
 // Get All Invoices (Supplier-side)
+=======
+// Get all invoices
+>>>>>>> 11a971a (latest commit , added few changes like email related , etc)
 export const getInvoices = async (req, res) => {
   try {
     const invoices = await Invoice.find().sort({ date: -1 });
@@ -64,10 +109,14 @@ export const getInvoices = async (req, res) => {
   }
 };
 
+<<<<<<< HEAD
 // Get Invoices for Specific Shopkeeper
   // Path to your Invoice model
 
 
+=======
+// Get invoices for a specific shopkeeper
+>>>>>>> 11a971a (latest commit , added few changes like email related , etc)
 export const getShopkeeperInvoices = async (req, res) => {
   const { shopkeeperId } = req.query;
 
@@ -81,7 +130,10 @@ export const getShopkeeperInvoices = async (req, res) => {
 
   try {
     const invoices = await Invoice.find({ shopkeeperId }).sort({ createdAt: -1 });
+<<<<<<< HEAD
 
+=======
+>>>>>>> 11a971a (latest commit , added few changes like email related , etc)
     res.status(200).json(invoices);
   } catch (err) {
     console.error("Error:", err.message);
