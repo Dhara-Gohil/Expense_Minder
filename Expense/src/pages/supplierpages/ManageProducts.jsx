@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
@@ -11,7 +12,7 @@ export default function ManageProducts() {
 
   const fetchProducts = async () => {
     try {
-      const res = await axios.get('http://localhost:5000/api/supplier/products');
+      const res = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/supplier/products`);
       setProducts(res.data);
     } catch (err) {
       console.error('Error fetching products:', err);
@@ -21,7 +22,7 @@ export default function ManageProducts() {
   const addProduct = async () => {
     if (newProduct.name && newProduct.quantity && newProduct.quantity >= 0) {
       try {
-        await axios.post('http://localhost:5000/api/supplier/products/add', newProduct);
+        await axios.post(`${process.env.REACT_APP_API_BASE_URL}/api/supplier/products/add`, newProduct);
         setNewProduct({ name: '', quantity: '' });
         fetchProducts();
       } catch (err) {
@@ -37,7 +38,10 @@ export default function ManageProducts() {
     const quantity = prompt('Enter new quantity');
     if (name && quantity && quantity >= 0) {
       try {
-        await axios.put(`http://localhost:5000/api/supplier/products/${id}`, { name, quantity });
+        await axios.put(`${process.env.REACT_APP_API_BASE_URL}/api/supplier/products/${encodeURIComponent(id)}`, {
+          name,
+          quantity,
+        });
         fetchProducts();
       } catch (err) {
         console.error('Error updating product:', err);
@@ -49,7 +53,7 @@ export default function ManageProducts() {
 
   const deleteProduct = async (id) => {
     try {
-      await axios.delete(`http://localhost:5000/api/supplier/products/${id}`);
+      await axios.delete(`${process.env.REACT_APP_API_BASE_URL}/api/supplier/products/${encodeURIComponent(id)}`);
       fetchProducts();
     } catch (err) {
       console.error('Error deleting product:', err);
@@ -59,8 +63,7 @@ export default function ManageProducts() {
   return (
     <div className="p-8 bg-gray-100 rounded-lg shadow-lg">
       <h2 className="text-3xl font-semibold mb-6 text-blue-700">Manage Products</h2>
-      
-      {/* Add New Product Form */}
+
       <div className="mb-6 flex gap-4">
         <input
           type="text"
@@ -89,11 +92,12 @@ export default function ManageProducts() {
         </button>
       </div>
 
-      {/* Products List */}
       <ul className="bg-white rounded-lg shadow p-6 space-y-4">
         {products.map((prod) => (
           <li key={prod._id} className="flex justify-between items-center border-b pb-4">
-            <span className="text-lg text-gray-700 font-medium">{prod.name} - {prod.quantity} units</span>
+            <span className="text-lg text-gray-700 font-medium">
+              {prod.name} - {prod.quantity} units
+            </span>
             <div className="space-x-4">
               <button
                 onClick={() => updateProduct(prod._id)}

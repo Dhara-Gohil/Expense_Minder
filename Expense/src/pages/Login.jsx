@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
@@ -12,14 +13,14 @@ export default function LoginPage() {
 
   const handleLogin = async (role) => {
     const route =
-      role === 'shopkeeper'
-        ? 'http://localhost:5000/api/auth/login/shopkeeper'
-        : 'http://localhost:5000/api/auth/login/supplier';
+       role === 'shopkeeper'
+      ? `${process.env.REACT_APP_API_BASE_URL}/api/auth/login/shopkeeper`
+      : `${process.env.REACT_APP_API_BASE_URL}/api/auth/login/supplier`;
 
     try {
       const res = await axios.post(route, formData);
     
-console.log("👉 Login Response:", res.data); // <-- Yeh laga do
+console.log("👉 Login Response:", res.data); 
 
 
       localStorage.setItem("token", res.data.token);

@@ -1,8 +1,10 @@
+/* eslint-disable no-undef */
 import React, { useEffect, useState, useRef } from 'react';
 import io from 'socket.io-client';
 import axios from 'axios';
 
-const socket = io('http://localhost:5000');
+const BASE_URL = process.env.REACT_APP_API_BASE_URL;
+const socket = io(BASE_URL);
 
 const ShopkeeperChat = () => {
   const [suppliers, setSuppliers] = useState([]);
@@ -13,11 +15,11 @@ const ShopkeeperChat = () => {
   const messagesEndRef = useRef(null);
 
   useEffect(() => {
-    axios.get('http://localhost:5000/api/shopkeeper/suppliers/')
+    axios.get(`${BASE_URL}/api/shopkeeper/suppliers/`)
       .then(res => setSuppliers(res.data))
       .catch(err => console.error('Error fetching suppliers:', err));
 
-    axios.get('http://localhost:5000/api/shopkeeper/chat')
+    axios.get(`${BASE_URL}/api/shopkeeper/chat`)
       .then(res => setMessages(res.data))
       .catch(err => console.error('Error fetching messages:', err));
 
@@ -44,11 +46,9 @@ const ShopkeeperChat = () => {
 
   const handleSend = async () => {
     if (!item || !quantity || !selectedSupplier) return;
-  
-    const shopkeeperName = localStorage.getItem('shopkeeperName'); // ✅ Get name from localStorage
-    console.log('Shopkeeper Name:', shopkeeperName);
 
-  
+    const shopkeeperName = localStorage.getItem('shopkeeperName');
+
     const newMsg = {
       shopkeeperName,
       supplierName: selectedSupplier,
@@ -56,10 +56,10 @@ const ShopkeeperChat = () => {
       quantity,
       timestamp: new Date().toISOString(),
     };
-  
+
     try {
       socket.emit('shopkeeperToSupplier', newMsg);
-      await axios.post('http://localhost:5000/api/shopkeeper/chat', newMsg);
+      await axios.post(`${BASE_URL}/api/shopkeeper/chat`, newMsg);
       setMessages([...messages, newMsg]);
       setItem('');
       setQuantity('');
@@ -67,7 +67,6 @@ const ShopkeeperChat = () => {
       console.error('Error sending message:', err);
     }
   };
-  
 
   return (
     <div className="max-w-2xl mx-auto bg-white rounded-lg shadow-lg p-4 h-[80vh] flex flex-col">

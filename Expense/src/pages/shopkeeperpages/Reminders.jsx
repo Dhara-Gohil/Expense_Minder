@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 
@@ -13,27 +14,17 @@ export default function Reminders() {
 
   const fetchReminders = async () => {
     try {
-      const res = await axios.get(`http://localhost:5000/api/supplier/invoice/shopkeeper?shopkeeperId=${shopkeeperId}`);
+      const res = await axios.get(
+        `${process.env.REACT_APP_API_BASE_URL}/api/supplier/invoice/shopkeeper?shopkeeperId=${shopkeeperId}`
+      );
       const bills = res.data;
-
       const now = new Date();
 
-      // Filter: Unpaid and older than 7 days
-<<<<<<< HEAD
       const overdue = bills.filter(bill => {
         const billDate = new Date(bill.createdAt);
         const diffDays = Math.floor((now - billDate) / (1000 * 60 * 60 * 24));
         return bill.paymentStatus !== "Paid" && diffDays > 7;
       });
-=======
-      // const overdue = bills.filter(bill => {
-      //   const billDate = new Date(bill.createdAt);
-      //   const diffDays = Math.floor((now - billDate) / (1000 * 60 * 60 * 24));
-      //   return bill.paymentStatus !== "Paid" && diffDays > 7;
-      // });
-
-      const overdue = bills.filter(bill => bill.paymentStatus !== "Paid");
->>>>>>> 11a971a (latest commit , added few changes like email related , etc)
 
       setReminders(overdue);
     } catch (err) {

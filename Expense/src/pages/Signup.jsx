@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 import React, { useState } from 'react';
 import axios from 'axios';
 
@@ -11,8 +12,8 @@ export default function SignupPage() {
   const handleSubmit = async (role) => {
     const route =
       role === 'shopkeeper'
-        ? 'http://localhost:5000/api/auth/signup/shopkeeper'
-        : 'http://localhost:5000/api/auth/signup/supplier';
+        ? `${process.env.REACT_APP_API_BASE_URL}/api/auth/signup/shopkeeper`
+        : `${process.env.REACT_APP_API_BASE_URL}/api/auth/signup/supplier`;
 
     try {
       const res = await axios.post(route, formData); // send to correct route

@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 
@@ -8,7 +9,7 @@ export default function ReceivedOrders() {
   useEffect(() => {
     const fetchChats = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/api/Shopkeeper/chat');
+        const response = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/Shopkeeper/chat`);
         // Filter messages with item and quantity (i.e., orders) and exclude replies
         const filtered = response.data.filter(
           msg => msg.item && msg.quantity && !msg.reply
@@ -25,7 +26,7 @@ export default function ReceivedOrders() {
   // Update status in backend and frontend
   const handleDelivered = async (id) => {
     try {
-      await axios.patch(`http://localhost:5000/api/Shopkeeper/chat/status/${id}`, {
+      await axios.patch(`${process.env.REACT_APP_API_BASE_URL}/api/Shopkeeper/chat/status/${id}`, {
         status: 'Delivered',
       });
 

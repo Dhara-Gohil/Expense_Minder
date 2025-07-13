@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 
@@ -10,7 +11,7 @@ export default function MonthlyExpense() {
     const fetchBills = async () => {
       try {
         // Fetching all invoices/bills for the shopkeeper from your API
-        const response = await axios.get(`http://localhost:5000/api/supplier/invoice/all?shopkeeperId=${shopkeeperId}`);
+        const response = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/supplier/invoice/all?shopkeeperId=${shopkeeperId}`);
         console.log("Fetched Bills: ", response.data);  // Debugging
 
         if (Array.isArray(response.data)) {

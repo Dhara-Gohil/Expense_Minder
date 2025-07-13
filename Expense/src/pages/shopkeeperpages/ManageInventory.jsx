@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Trash2 } from 'lucide-react';
@@ -6,7 +7,7 @@ export default function ManageInventory() {
   const [products, setProducts] = useState([]);
   const [newProduct, setNewProduct] = useState({ name: '', quantity: '' });
 
-  const API = 'http://localhost:5000/api/products';
+  const API = `${process.env.REACT_APP_API_BASE_URL}/api/products`;
 
   // Fetch all products
   useEffect(() => {
@@ -21,10 +22,12 @@ export default function ManageInventory() {
       axios.post(API, {
         name: newProduct.name,
         quantity: parseInt(newProduct.quantity),
-      }).then(res => {
+      })
+      .then(res => {
         setProducts([...products, res.data]);
         setNewProduct({ name: '', quantity: '' });
-      }).catch(err => console.error('Error adding product:', err));
+      })
+      .catch(err => console.error('Error adding product:', err));
     }
   };
 

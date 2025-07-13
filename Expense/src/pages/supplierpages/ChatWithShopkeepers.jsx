@@ -1,35 +1,36 @@
-import React, { useEffect, useState } from 'react';
+/* eslint-disable no-undef */
+import React, { useEffect, useState, useRef } from 'react';
 import io from 'socket.io-client';
 import axios from 'axios';
 
-const socket = io('http://localhost:5000');
-
 const SupplierChat = () => {
-  const [supplierName, setSupplierName] = useState('Supplier1'); 
+  // eslint-disable-next-line no-unused-vars
+  const [supplierName, setSupplierName] = useState('Supplier1');
   const [shopkeepers, setShopkeepers] = useState([]);
   const [shopkeeperNames, setShopkeeperNames] = useState({});
   const [selectedShopkeeper, setSelectedShopkeeper] = useState('');
   const [messages, setMessages] = useState([]);
   const [reply, setReply] = useState('');
+  const socketRef = useRef(null);
 
-  // Fetch initial messages
   useEffect(() => {
+    socketRef.current = io(process.env.REACT_APP_API_BASE_URL);
+
     const fetchMessages = async () => {
       try {
-        const res = await axios.get(`http://localhost:5000/api/supplier/chat?supplierName=${supplierName}`);
+        const res = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/supplier/chat?supplierName=${supplierName}`);
         const msgs = res.data;
         setMessages(msgs);
 
         const uniqueShopkeepers = [...new Set(msgs.map(m => m.shopkeeperName))];
         setShopkeepers(uniqueShopkeepers);
 
-        const shopkeeperNamesRes = await axios.get('http://localhost:5000/api/supplier/shopkeepers');
+        const shopkeeperNamesRes = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/supplier/shopkeepers`);
         const namesMap = {};
         shopkeeperNamesRes.data.forEach(shopkeeper => {
           namesMap[shopkeeper.username] = shopkeeper.name;
         });
         setShopkeeperNames(namesMap);
-
       } catch (err) {
         console.error('Fetch error:', err);
       }
@@ -37,19 +38,24 @@ const SupplierChat = () => {
 
     fetchMessages();
 
+    const socket = socketRef.current;
     socket.on('shopkeeperToSupplier', (newMessage) => {
       if (newMessage.supplierName === supplierName) {
         setMessages(prev => [...prev, newMessage]);
-        if (!shopkeepers.includes(newMessage.shopkeeperName)) {
-          setShopkeepers(prev => [...prev, newMessage.shopkeeperName]);
-        }
+        setShopkeepers(prev => {
+          if (!prev.includes(newMessage.shopkeeperName)) {
+            return [...prev, newMessage.shopkeeperName];
+          }
+          return prev;
+        });
       }
     });
 
-    return () => socket.off('shopkeeperToSupplier');
-  }, [supplierName, shopkeepers]);
+    return () => {
+      socket.disconnect();
+    };
+  }, [supplierName]);
 
-  // Handle sending a reply
   const handleReply = async () => {
     if (!reply || !selectedShopkeeper) return;
 
@@ -60,8 +66,8 @@ const SupplierChat = () => {
       timestamp: new Date().toISOString(),
     };
 
-    socket.emit('supplierToShopkeeper', newReply);
-    await axios.post('http://localhost:5000/api/supplier/chat/reply', newReply);
+    socketRef.current.emit('supplierToShopkeeper', newReply);
+    await axios.post(`${process.env.REACT_APP_API_BASE_URL}/api/supplier/chat/reply`, newReply);
     setMessages(prev => [...prev, newReply]);
     setReply('');
   };

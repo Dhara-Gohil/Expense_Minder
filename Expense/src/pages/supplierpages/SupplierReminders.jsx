@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 
@@ -10,7 +11,7 @@ export default function Reminders() {
 
   const fetchReminders = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/api/supplier/invoice/all");
+      const res = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/supplier/invoice/all`);
       const allBills = res.data;
 
       const now = new Date();

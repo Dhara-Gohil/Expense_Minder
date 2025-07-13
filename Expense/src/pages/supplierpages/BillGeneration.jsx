@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 import React, { useState, useEffect } from 'react';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
@@ -29,7 +30,7 @@ export default function BillGeneration() {
 
   const fetchStoredBills = async () => {
     try {
-      const res = await axios.get('http://localhost:5000/api/supplier/invoice/all');
+      const res = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/supplier/invoice/all`);
       setStoredBills(res.data);
     } catch (err) {
       console.error('Error fetching stored bills:', err);
@@ -38,7 +39,7 @@ export default function BillGeneration() {
 
   const fetchShopkeepers = async () => {
     try {
-      const res = await axios.get('http://localhost:5000/api/supplier/shopkeepers');
+      const res = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/supplier/shopkeepers`);
       setShopkeepers(res.data);
     } catch (err) {
       console.error('Failed to fetch shopkeepers:', err);

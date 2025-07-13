@@ -1,9 +1,7 @@
+/* eslint-disable no-undef */
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-// import  QRCode  from "qrcode.react";
 import QRCode from "react-qr-code";
-
-
 
 const History = () => {
   const [bills, setBills] = useState([]);
@@ -22,8 +20,9 @@ const History = () => {
       }
 
       try {
+        const BASE_URL = process.env.REACT_APP_API_BASE_URL;
         const response = await axios.get(
-          `http://localhost:5000/api/supplier/invoice/shopkeeper?shopkeeperId=${shopkeeperId}`
+          `${BASE_URL}/api/supplier/invoice/shopkeeper?shopkeeperId=${shopkeeperId}`
         );
         setBills(response.data);
       } catch (error) {
@@ -110,7 +109,6 @@ const History = () => {
                         <QRCode value={upiLink} size={128} />
                       </div>
                     </div>
-
                   )}
                 </div>
               </div>
