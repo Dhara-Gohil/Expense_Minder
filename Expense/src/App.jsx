@@ -9,6 +9,9 @@ import SignUp from './pages/Signup';
 import Login from './pages/Login';
 import ShopkeeperDashboard from './pages/ShopkeeperDashboard';
 import SupplierDashboard from './pages/SupplierDashboard';
+//route
+import { Routes, Route } from 'react-router-dom'; 
+
 // Shopkeeper Pages
 import ManageInventory from './pages/shopkeeperpages/ManageInventory';
 import ViewOrders from './pages/shopkeeperpages/ViewOrders';
