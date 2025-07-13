@@ -141,7 +141,7 @@ export default function BillGeneration() {
         })),
       };
 
-      await axios.post('http://localhost:5000/api/supplier/invoice/create', invoicePayload);
+      await axios.post(`${process.env.REACT_APP_API_BASE_URL}/api/supplier/invoice/create`, invoicePayload);
       fetchStoredBills();
       setSelectedItems([]);
     } catch (err) {
@@ -151,7 +151,7 @@ export default function BillGeneration() {
 
   const handleMarkAsPaid = async (invoiceId) => {
     try {
-      await axios.put(`http://localhost:5000/api/supplier/invoice/mark-paid/${invoiceId}`);
+      await axios.put(`${process.env.REACT_APP_API_BASE_URL}/api/supplier/invoice/mark-paid/${invoiceId}`);
       // ✅ Refresh the bills after update
       fetchStoredBills();
     } catch (err) {
