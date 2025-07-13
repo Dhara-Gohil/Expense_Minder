@@ -22,7 +22,10 @@ import contactRoutes from './routes/contactRoutes.js';
 dotenv.config();
 const app = express();
 
-app.use(cors()); // allow frontend requests
+app.use(cors({
+  origin: ["https://expenseminder0.onrender.com", "http://localhost:3000"],
+  credentials: true
+})); // allow frontend requests
 app.use(express.json());
 
 const server = http.createServer(app);
