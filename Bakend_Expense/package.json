@@ -21,10 +21,9 @@
     "jspdf-autotable": "^5.0.2",
     "mongoose": "^8.13.2",
     "nodemailer": "^6.10.1",
-<<<<<<< HEAD
-=======
+
     "pdfkit": "^0.17.1",
->>>>>>> 11a971a (latest commit , added few changes like email related , etc)
+
     "react-router-dom": "^7.5.0",
     "socket.io": "^4.8.1"
   },
