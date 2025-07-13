@@ -4,7 +4,11 @@ import io from 'socket.io-client';
 import axios from 'axios';
 
 const BASE_URL = import.meta.env.VITE_API_BASE_URL;
-const socket = io(BASE_URL);
+const socket = io(BASE_URL, {
+  transports: ['websocket'],
+  withCredentials: true,
+});
+
 
 const ShopkeeperChat = () => {
   const [suppliers, setSuppliers] = useState([]);
