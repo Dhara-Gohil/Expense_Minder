@@ -7,7 +7,7 @@ export default function ManageInventory() {
   const [products, setProducts] = useState([]);
   const [newProduct, setNewProduct] = useState({ name: '', quantity: '' });
 
-  const API = `${process.env.REACT_APP_API_BASE_URL}/api/products`;
+  const API = `${import.meta.env.VITE_API_BASE_URL}/api/products`;
 
   // Fetch all products
   useEffect(() => {

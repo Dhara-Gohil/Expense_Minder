@@ -12,8 +12,8 @@ export default function SignupPage() {
   const handleSubmit = async (role) => {
     const route =
       role === 'shopkeeper'
-        ? `${process.env.REACT_APP_API_BASE_URL}/api/auth/signup/shopkeeper`
-        : `${process.env.REACT_APP_API_BASE_URL}/api/auth/signup/supplier`;
+        ? `${import.meta.env.VITE_API_BASE_URL}/api/auth/signup/shopkeeper`
+        : `${import.meta.env.VITE_API_BASE_URL}/api/auth/signup/supplier`;
 
     try {
       const res = await axios.post(route, formData); // send to correct route

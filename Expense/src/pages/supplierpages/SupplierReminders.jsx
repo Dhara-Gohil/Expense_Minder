@@ -11,7 +11,7 @@ export default function Reminders() {
 
   const fetchReminders = async () => {
     try {
-      const res = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/supplier/invoice/all`);
+      const res = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/supplier/invoice/all`);
       const allBills = res.data;
 
       const now = new Date();

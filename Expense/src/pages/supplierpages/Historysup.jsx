@@ -10,7 +10,7 @@ const History = () => {
     const fetchBills = async () => {
       try {
         const response = await axios.get(
-          `${process.env.REACT_APP_API_BASE_URL}/api/supplier/invoice/all`,
+          `${import.meta.env.VITE_API_BASE_URL}/api/supplier/invoice/all`,
           {
             params: { shopkeeperId },
           }

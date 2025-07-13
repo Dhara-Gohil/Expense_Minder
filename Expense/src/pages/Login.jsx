@@ -14,8 +14,8 @@ export default function LoginPage() {
   const handleLogin = async (role) => {
     const route =
        role === 'shopkeeper'
-      ? `${process.env.REACT_APP_API_BASE_URL}/api/auth/login/shopkeeper`
-      : `${process.env.REACT_APP_API_BASE_URL}/api/auth/login/supplier`;
+      ? `${import.meta.env.VITE_API_BASE_URL}/api/auth/login/shopkeeper`
+      : `${import.meta.env.VITE_API_BASE_URL}/api/auth/login/supplier`;
 
     try {
       const res = await axios.post(route, formData);

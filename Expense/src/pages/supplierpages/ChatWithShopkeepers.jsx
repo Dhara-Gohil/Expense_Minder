@@ -14,18 +14,18 @@ const SupplierChat = () => {
   const socketRef = useRef(null);
 
   useEffect(() => {
-    socketRef.current = io(process.env.REACT_APP_API_BASE_URL);
+    socketRef.current = io(import.meta.env.VITE_API_BASE_URL);
 
     const fetchMessages = async () => {
       try {
-        const res = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/supplier/chat?supplierName=${supplierName}`);
+        const res = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/supplier/chat?supplierName=${supplierName}`);
         const msgs = res.data;
         setMessages(msgs);
 
         const uniqueShopkeepers = [...new Set(msgs.map(m => m.shopkeeperName))];
         setShopkeepers(uniqueShopkeepers);
 
-        const shopkeeperNamesRes = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/supplier/shopkeepers`);
+        const shopkeeperNamesRes = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/supplier/shopkeepers`);
         const namesMap = {};
         shopkeeperNamesRes.data.forEach(shopkeeper => {
           namesMap[shopkeeper.username] = shopkeeper.name;
@@ -67,7 +67,7 @@ const SupplierChat = () => {
     };
 
     socketRef.current.emit('supplierToShopkeeper', newReply);
-    await axios.post(`${process.env.REACT_APP_API_BASE_URL}/api/supplier/chat/reply`, newReply);
+    await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/supplier/chat/reply`, newReply);
     setMessages(prev => [...prev, newReply]);
     setReply('');
   };

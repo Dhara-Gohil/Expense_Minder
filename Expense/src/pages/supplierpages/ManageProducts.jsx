@@ -12,7 +12,7 @@ export default function ManageProducts() {
 
   const fetchProducts = async () => {
     try {
-      const res = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/supplier/products`);
+      const res = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/supplier/products`);
       setProducts(res.data);
     } catch (err) {
       console.error('Error fetching products:', err);
@@ -22,7 +22,7 @@ export default function ManageProducts() {
   const addProduct = async () => {
     if (newProduct.name && newProduct.quantity && newProduct.quantity >= 0) {
       try {
-        await axios.post(`${process.env.REACT_APP_API_BASE_URL}/api/supplier/products/add`, newProduct);
+        await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/supplier/products/add`, newProduct);
         setNewProduct({ name: '', quantity: '' });
         fetchProducts();
       } catch (err) {
@@ -38,7 +38,7 @@ export default function ManageProducts() {
     const quantity = prompt('Enter new quantity');
     if (name && quantity && quantity >= 0) {
       try {
-        await axios.put(`${process.env.REACT_APP_API_BASE_URL}/api/supplier/products/${encodeURIComponent(id)}`, {
+        await axios.put(`${import.meta.env.VITE_API_BASE_URL}/api/supplier/products/${encodeURIComponent(id)}`, {
           name,
           quantity,
         });
@@ -53,7 +53,7 @@ export default function ManageProducts() {
 
   const deleteProduct = async (id) => {
     try {
-      await axios.delete(`${process.env.REACT_APP_API_BASE_URL}/api/supplier/products/${encodeURIComponent(id)}`);
+      await axios.delete(`${import.meta.env.VITE_API_BASE_URL}/api/supplier/products/${encodeURIComponent(id)}`);
       fetchProducts();
     } catch (err) {
       console.error('Error deleting product:', err);

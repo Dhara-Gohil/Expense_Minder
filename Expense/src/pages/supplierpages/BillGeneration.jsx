@@ -30,7 +30,7 @@ export default function BillGeneration() {
 
   const fetchStoredBills = async () => {
     try {
-      const res = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/supplier/invoice/all`);
+      const res = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/supplier/invoice/all`);
       setStoredBills(res.data);
     } catch (err) {
       console.error('Error fetching stored bills:', err);
@@ -39,7 +39,7 @@ export default function BillGeneration() {
 
   const fetchShopkeepers = async () => {
     try {
-      const res = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/supplier/shopkeepers`);
+      const res = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/supplier/shopkeepers`);
       setShopkeepers(res.data);
     } catch (err) {
       console.error('Failed to fetch shopkeepers:', err);
@@ -141,7 +141,7 @@ export default function BillGeneration() {
         })),
       };
 
-      await axios.post(`${process.env.REACT_APP_API_BASE_URL}/api/supplier/invoice/create`, invoicePayload);
+      await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/supplier/invoice/create`, invoicePayload);
       fetchStoredBills();
       setSelectedItems([]);
     } catch (err) {
@@ -151,7 +151,7 @@ export default function BillGeneration() {
 
   const handleMarkAsPaid = async (invoiceId) => {
     try {
-      await axios.put(`${process.env.REACT_APP_API_BASE_URL}/api/supplier/invoice/mark-paid/${invoiceId}`);
+      await axios.put(`${import.meta.env.VITE_API_BASE_URL}/api/supplier/invoice/mark-paid/${invoiceId}`);
       // ✅ Refresh the bills after update
       fetchStoredBills();
     } catch (err) {

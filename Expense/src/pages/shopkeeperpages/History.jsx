@@ -20,9 +20,9 @@ const History = () => {
       }
 
       try {
-        const BASE_URL = process.env.REACT_APP_API_BASE_URL;
+        const BASE_URL = import.meta.env.VITE_API_BASE_URL;
         const response = await axios.get(
-          `${process.env.REACT_APP_API_BASE_URL}/api/supplier/invoice/shopkeeper?shopkeeperId=${shopkeeperId}`
+          `${BASE_URL}/api/supplier/invoice/shopkeeper?shopkeeperId=${shopkeeperId}`
         );
         setBills(response.data);
       } catch (error) {
