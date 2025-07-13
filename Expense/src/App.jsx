@@ -7,7 +7,6 @@ import Pricing from './pages/Pricing';
 import Contact from './pages/Contact';
 import SignUp from './pages/Signup';
 import Login from './pages/Login';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import ShopkeeperDashboard from './pages/ShopkeeperDashboard';
 import SupplierDashboard from './pages/SupplierDashboard';
 // Shopkeeper Pages
@@ -29,7 +28,7 @@ import SupplierReminders from './pages/supplierpages/SupplierReminders';
 
 function App() {
   return (
-    <Router>
+    
       <div className="min-h-screen flex flex-col bg-gray-50 text-gray-800">
         <Header />
         <main className="flex-grow">
@@ -64,7 +63,7 @@ function App() {
         </main>
         <Footer />
       </div>
-    </Router>
+    
   );
 }
 
