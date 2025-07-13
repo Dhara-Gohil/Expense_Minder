@@ -1,9 +1,13 @@
 /* eslint-disable no-undef */
-import React, { useState } from 'react';
-import axios from 'axios';
-
+import React, { useState } from "react";
+import axios from "axios";
+import { Link } from "react-router-dom";
 export default function SignupPage() {
-  const [formData, setFormData] = useState({ name: '', email: '', password: '' });
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    password: "",
+  });
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -11,16 +15,16 @@ export default function SignupPage() {
 
   const handleSubmit = async (role) => {
     const route =
-      role === 'shopkeeper'
+      role === "shopkeeper"
         ? `${import.meta.env.VITE_API_BASE_URL}/api/auth/signup/shopkeeper`
         : `${import.meta.env.VITE_API_BASE_URL}/api/auth/signup/supplier`;
 
     try {
       const res = await axios.post(route, formData); // send to correct route
       alert(res.data.message);
-      setFormData({ name: '', email: '', password: '' });
+      setFormData({ name: "", email: "", password: "" });
     } catch (err) {
-      alert(err.response?.data?.message || 'Error occurred');
+      alert(err.response?.data?.message || "Error occurred");
     }
   };
 
@@ -45,7 +49,9 @@ export default function SignupPage() {
           </div>
 
           <div>
-            <label className="block text-gray-700 font-medium mb-1">Email</label>
+            <label className="block text-gray-700 font-medium mb-1">
+              Email
+            </label>
             <input
               name="email"
               type="email"
@@ -57,7 +63,9 @@ export default function SignupPage() {
           </div>
 
           <div>
-            <label className="block text-gray-700 font-medium mb-1">Password</label>
+            <label className="block text-gray-700 font-medium mb-1">
+              Password
+            </label>
             <input
               name="password"
               type="password"
@@ -71,7 +79,7 @@ export default function SignupPage() {
           <div className="flex flex-col sm:flex-row gap-4">
             <button
               type="button"
-              onClick={() => handleSubmit('shopkeeper')}
+              onClick={() => handleSubmit("shopkeeper")}
               className="w-full bg-yellow-500 text-white font-semibold py-2 px-4 rounded-md hover:bg-yellow-600 transition"
             >
               Sign Up as Shopkeeper
@@ -79,7 +87,7 @@ export default function SignupPage() {
 
             <button
               type="button"
-              onClick={() => handleSubmit('supplier')}
+              onClick={() => handleSubmit("supplier")}
               className="w-full bg-yellow-500 text-white font-semibold py-2 px-4 rounded-md hover:bg-yellow-600 transition"
             >
               Sign Up as Supplier
@@ -88,10 +96,10 @@ export default function SignupPage() {
         </form>
 
         <p className="text-sm text-center text-gray-600 mt-4">
-          Already have an account?{' '}
-          <a href="/login" className="text-yellow-500 hover:underline">
+          Already have an account?{" "}
+          <Link to="/login" className="text-yellow-500 hover:underline">
             Login here
-          </a>
+          </Link>
         </p>
       </div>
     </div>

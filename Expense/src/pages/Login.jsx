@@ -1,10 +1,10 @@
 /* eslint-disable no-undef */
-import React, { useState } from 'react';
-import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
-
+import React, { useState } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 export default function LoginPage() {
-  const [formData, setFormData] = useState({ email: '', password: '' });
+  const [formData, setFormData] = useState({ email: "", password: "" });
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -13,18 +13,17 @@ export default function LoginPage() {
 
   const handleLogin = async (role) => {
     const route =
-       role === 'shopkeeper'
-      ? `${import.meta.env.VITE_API_BASE_URL}/api/auth/login/shopkeeper`
-      : `${import.meta.env.VITE_API_BASE_URL}/api/auth/login/supplier`;
+      role === "shopkeeper"
+        ? `${import.meta.env.VITE_API_BASE_URL}/api/auth/login/shopkeeper`
+        : `${import.meta.env.VITE_API_BASE_URL}/api/auth/login/supplier`;
 
     try {
       const res = await axios.post(route, formData);
-    
-console.log("👉 Login Response:", res.data); 
 
+      console.log("👉 Login Response:", res.data);
 
       localStorage.setItem("token", res.data.token);
-      if (role === 'shopkeeper') {
+      if (role === "shopkeeper") {
         localStorage.setItem("shopkeeperId", res.data.user._id);
         localStorage.setItem("shopkeeperName", res.data.user.name); // ✅ Add this
         localStorage.setItem("shopkeeperEmail", res.data.user.email); // Optional
@@ -36,18 +35,17 @@ console.log("👉 Login Response:", res.data);
 
       window.dispatchEvent(new Event("storage"));
 
-      if (role === 'shopkeeper') {
-        navigate('/shopkeeper/dashboard');
+      if (role === "shopkeeper") {
+        navigate("/shopkeeper/dashboard");
       } else {
-        navigate('/supplier/dashboard');
+        navigate("/supplier/dashboard");
       }
 
-      setFormData({ email: '', password: '' });
+      setFormData({ email: "", password: "" });
     } catch (err) {
-      alert(err.response?.data?.message || 'Login failed');
+      alert(err.response?.data?.message || "Login failed");
     }
   };
-
 
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4 py-12">
@@ -58,7 +56,9 @@ console.log("👉 Login Response:", res.data);
 
         <form className="space-y-5" onSubmit={(e) => e.preventDefault()}>
           <div>
-            <label className="block text-gray-700 font-medium mb-1">Email</label>
+            <label className="block text-gray-700 font-medium mb-1">
+              Email
+            </label>
             <input
               type="email"
               name="email"
@@ -70,7 +70,9 @@ console.log("👉 Login Response:", res.data);
           </div>
 
           <div>
-            <label className="block text-gray-700 font-medium mb-1">Password</label>
+            <label className="block text-gray-700 font-medium mb-1">
+              Password
+            </label>
             <input
               type="password"
               name="password"
@@ -86,15 +88,12 @@ console.log("👉 Login Response:", res.data);
               <input type="checkbox" className="mr-2" />
               Remember me
             </label>
-            <a href="#" className="text-yellow-500 hover:underline">
-              Forgot Password?
-            </a>
           </div>
 
           <div className="flex flex-col sm:flex-row gap-4">
             <button
               type="button"
-              onClick={() => handleLogin('shopkeeper')}
+              onClick={() => handleLogin("shopkeeper")}
               className="w-full bg-yellow-500 text-white font-semibold py-2 px-4 rounded-md hover:bg-yellow-600 transition"
             >
               Login as Shopkeeper
@@ -102,7 +101,7 @@ console.log("👉 Login Response:", res.data);
 
             <button
               type="button"
-              onClick={() => handleLogin('supplier')}
+              onClick={() => handleLogin("supplier")}
               className="w-full bg-yellow-500 text-white font-semibold py-2 px-4 rounded-md hover:bg-yellow-600 transition"
             >
               Login as Supplier
@@ -111,10 +110,10 @@ console.log("👉 Login Response:", res.data);
         </form>
 
         <p className="text-sm text-center text-gray-600 mt-4">
-          Don't have an account?{' '}
-          <a href="/signup" className="text-yellow-500 hover:underline">
+          Don't have an account?{" "}
+          <Link to="/signup" className="text-yellow-500 hover:underline">
             Sign up here
-          </a>
+          </Link>
         </p>
       </div>
     </div>
