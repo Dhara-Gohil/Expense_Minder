@@ -1,24 +1,22 @@
 import React, { useState, useEffect } from "react";
 import { ChevronDown, ChevronUp } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
-// import { useLocation } from "react-router-dom"; // add at top if not already
+
 export default function Header() {
   const [isOpen, setIsOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userType, setUserType] = useState(null);
   const navigate = useNavigate();
-  // const location = useLocation();
 
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
       try {
         const decoded = jwtDecode(token);
-        const currentTime = Date.now() / 1000; // in seconds
+        const currentTime = Date.now() / 1000;
 
         if (decoded.exp && decoded.exp < currentTime) {
-          // Token expired, clear and logout
           localStorage.removeItem("token");
           setIsLoggedIn(false);
           setUserType(null);
@@ -26,7 +24,6 @@ export default function Header() {
           setIsLoggedIn(true);
           setUserType(decoded.userType || null);
 
-          // 🚀 Auto redirect if on "/" while logged in
           if (window.location.pathname === "/") {
             if (decoded.userType === "shopkeeper") {
               navigate("/shopkeeper/dashboard");
@@ -42,7 +39,6 @@ export default function Header() {
         setUserType(null);
       }
     } else {
-      // No token, ensure logged out state
       setIsLoggedIn(false);
       setUserType(null);
     }
@@ -73,30 +69,21 @@ export default function Header() {
 
   const navItemsLoggedOut = (
     <>
-      <a href="/" className="hover:text-yellow-700 transition text-black">
+      <Link to="/" className="hover:text-yellow-700 transition text-black">
         Home
-      </a>
-      <a
-        href="/features"
-        className="hover:text-yellow-700 transition text-black"
-      >
+      </Link>
+      <Link to="/features" className="hover:text-yellow-700 transition text-black">
         Features
-      </a>
-      <a
-        href="/pricing"
-        className="hover:text-yellow-700 transition text-black"
-      >
+      </Link>
+      <Link to="/pricing" className="hover:text-yellow-700 transition text-black">
         Pricing
-      </a>
-      <a
-        href="/contact"
-        className="hover:text-yellow-700 transition text-black"
-      >
+      </Link>
+      <Link to="/contact" className="hover:text-yellow-700 transition text-black">
         Contact
-      </a>
-      <a href="/signup" className="hover:text-yellow-700 transition text-black">
+      </Link>
+      <Link to="/signup" className="hover:text-yellow-700 transition text-black">
         Sign Up
-      </a>
+      </Link>
     </>
   );
 
@@ -137,7 +124,6 @@ export default function Header() {
           {isLoggedIn ? navItemsLoggedIn : navItemsLoggedOut}
         </nav>
 
-        {/* Toggle icon for small screens */}
         <button onClick={() => setIsOpen(!isOpen)} className="md:hidden">
           {isOpen ? (
             <ChevronUp size={24} className="text-black" />
@@ -147,7 +133,6 @@ export default function Header() {
         </button>
       </div>
 
-      {/* Mobile nav dropdown */}
       <div
         className={`md:hidden bg-gradient-to-br from-yellow-100 to-gray-200 px-6 py-4 text-black shadow-md rounded-b-xl text-center transform transition-all duration-300 ease-in-out ${
           isOpen
@@ -178,36 +163,36 @@ export default function Header() {
           </>
         ) : (
           <>
-            <a
-              href="/"
+            <Link
+              to="/"
               className="block py-2 text-base font-medium hover:text-yellow-700 transition duration-200"
             >
               Home
-            </a>
-            <a
-              href="/features"
+            </Link>
+            <Link
+              to="/features"
               className="block py-2 text-base font-medium hover:text-yellow-700 transition duration-200"
             >
               Features
-            </a>
-            <a
-              href="/pricing"
+            </Link>
+            <Link
+              to="/pricing"
               className="block py-2 text-base font-medium hover:text-yellow-700 transition duration-200"
             >
               Pricing
-            </a>
-            <a
-              href="/contact"
+            </Link>
+            <Link
+              to="/contact"
               className="block py-2 text-base font-medium hover:text-yellow-700 transition duration-200"
             >
               Contact
-            </a>
-            <a
-              href="/signup"
+            </Link>
+            <Link
+              to="/signup"
               className="block py-2 text-base font-medium hover:text-yellow-700 transition duration-200"
             >
               Sign Up
-            </a>
+            </Link>
           </>
         )}
       </div>
