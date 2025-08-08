@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import { useNavigate, Link } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
@@ -8,6 +8,7 @@ export default function Header() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userType, setUserType] = useState(null);
   const navigate = useNavigate();
+  const dropdownRef = useRef(null);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -43,6 +44,20 @@ export default function Header() {
       setUserType(null);
     }
   }, [navigate]);
+
+  // Close dropdown when clicked outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   const handleLogout = () => {
     localStorage.removeItem("token");
@@ -115,7 +130,7 @@ export default function Header() {
       <div className="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center text-white">
         <div
           onClick={handleHomeClick}
-          className="mx-10 my-0.5 sm:mx-0 text-2xl font-bold tracking-wide px-2 py-1 rounded text-black cursor-pointer"
+          className="mx-2 my-0.5 text-2xl font-bold tracking-wide px-2 py-1 rounded text-black cursor-pointer"
         >
           Expense<span className="text-yellow-300">Minder</span>
         </div>
@@ -134,7 +149,8 @@ export default function Header() {
       </div>
 
       <div
-        className={`md:hidden bg-gradient-to-br from-yellow-100 to-gray-200 px-6 py-4 text-black shadow-md rounded-b-xl text-center transform transition-all duration-300 ease-in-out ${
+        ref={dropdownRef}
+        className={`md:hidden bg-gradient-to-br from-yellow-100 to-gray-200 px-6 py-0 sm:py-4 text-black shadow-md rounded-b-xl text-center transform transition-all duration-300 ease-in-out ${
           isOpen
             ? "opacity-100 max-h-screen scale-100"
             : "opacity-0 max-h-0 scale-95 overflow-hidden"

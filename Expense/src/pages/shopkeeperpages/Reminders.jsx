@@ -22,7 +22,7 @@ export default function Reminders() {
 
       const overdue = bills.filter(bill => {
         const billDate = new Date(bill.createdAt);
-        const diffDays = Math.floor((now - billDate) / (1000 * 60 * 60 * 24));
+        const diffDays = Math.floor((now - billDate) / (1000));
         return bill.paymentStatus !== "Paid" && diffDays > 7;
       });
 
