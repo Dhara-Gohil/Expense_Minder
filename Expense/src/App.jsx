@@ -11,7 +11,7 @@ import ShopkeeperDashboard from './pages/ShopkeeperDashboard';
 import SupplierDashboard from './pages/SupplierDashboard';
 //route
 import { Routes, Route } from 'react-router-dom'; 
-
+import ProtectedRoute from './components/protectedRoute';
 // Shopkeeper Pages
 import ManageInventory from './pages/shopkeeperpages/ManageInventory';
 import ViewOrders from './pages/shopkeeperpages/ViewOrders';
@@ -42,8 +42,8 @@ function App() {
             <Route path="/contact" element={<Contact />} />
             <Route path="/signup" element={<SignUp />} />
             <Route path="/login" element={<Login />} />
-            <Route path="/shopkeeper/dashboard" element={<ShopkeeperDashboard />} />
-            <Route path="/supplier/dashboard" element={<SupplierDashboard />} />
+            <Route path="/shopkeeper/dashboard" element={ <ProtectedRoute role="shopkeeper"><ShopkeeperDashboard /> </ProtectedRoute>} />
+            <Route path="/supplier/dashboard" element={ <ProtectedRoute role="shopkeeper"><SupplierDashboard /> </ProtectedRoute>} />
 
             {/* Shopkeeper Routes */}
             <Route path="/shopkeeper/inventory" element={<ManageInventory />} />
