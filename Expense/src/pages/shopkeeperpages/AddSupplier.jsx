@@ -74,7 +74,7 @@ const ShopkeeperChat = () => {
 
   return (
     <div className="max-w-2xl mx-auto bg-white rounded-lg shadow-lg p-4 h-[80vh] flex flex-col">
-      <h2 className="text-2xl font-bold mb-4 text-center text-blue-700">Shopkeeper Chat</h2>
+      <h2 className="text-2xl font-bold mb-4 text-center text-blue-700">Select a supplier and start placing Orders</h2>
 
       <div className="mb-3">
         <select

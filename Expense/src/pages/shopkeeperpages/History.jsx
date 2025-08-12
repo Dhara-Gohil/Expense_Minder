@@ -56,7 +56,7 @@ const History = () => {
 
   return (
     <div className="p-6">
-      <h2 className="text-2xl font-bold mb-6">Bill History</h2>
+      <h2 className="text-2xl font-bold mb-6">Make your Payments</h2>
       {bills.length === 0 ? (
         <p>No bills available.</p>
       ) : (
@@ -67,7 +67,9 @@ const History = () => {
             return (
               <div
                 key={bill._id}
-                className="border rounded-lg shadow-md p-6 bg-white hover:shadow-xl transition duration-300"
+                className={`border rounded-lg shadow-md p-6 bg-white hover:shadow-xl transition duration-300 ${
+                  bill.paymentStatus === "Paid" ? "opacity-70" : ""
+                }`}
               >
                 <p className="text-sm text-gray-500">
                   Date:{" "}
@@ -95,7 +97,11 @@ const History = () => {
 
                 {/* Payment section */}
                 <div className="mt-4 text-right">
-                  {isMobile ? (
+                  {bill.paymentStatus === "Paid" ? (
+                    <span className="px-3 py-1 bg-green-100 text-green-700 rounded">
+                      ✅ Paid
+                    </span>
+                  ) : isMobile ? (
                     <a
                       href={upiLink}
                       className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition"
@@ -104,7 +110,9 @@ const History = () => {
                     </a>
                   ) : (
                     <div className="flex flex-col items-end">
-                      <p className="text-sm text-gray-500 mb-2">Scan QR to pay:</p>
+                      <p className="text-sm text-gray-500 mb-2">
+                        Scan QR to pay:
+                      </p>
                       <div className="bg-white p-2 rounded shadow">
                         <QRCode value={upiLink} size={128} />
                       </div>

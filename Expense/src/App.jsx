@@ -49,7 +49,7 @@ function App() {
             <Route path="/shopkeeper/inventory" element={<ManageInventory />} />
             <Route path="/shopkeeper/orders" element={<ViewOrders />} />
             <Route path="/shopkeeper/suppliers" element={<AddSupplier />} />
-            <Route path="/shopkeeper/history" element={<History />} />
+            <Route path="/shopkeeper/payments" element={<History />} />
             <Route path="/shopkeeper/reminders" element={<Reminders />} />
             <Route path="/shopkeeper/expenses" element={<ExpenseReport />} />
             {/* <Route path="/supplier-reply" element={<SupplierReply />} /> */}

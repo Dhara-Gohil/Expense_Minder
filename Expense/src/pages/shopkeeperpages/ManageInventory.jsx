@@ -11,7 +11,7 @@ export default function ManageInventory() {
 
   // Fetch all products
   useEffect(() => {
-    axios.get(API)
+      axios.get(API)
       .then(res => setProducts(res.data))
       .catch(err => console.error('Error fetching products:', err));
   }, []);

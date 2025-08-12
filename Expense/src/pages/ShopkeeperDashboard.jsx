@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Menu, Package, Clipboard, Users, BarChart2, FileText } from 'lucide-react';
+import { Menu, Package, Clipboard, Users, BarChart2, FileText , BellRing } from 'lucide-react';
 
 export default function ShopkeeperDashboard() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -21,8 +21,8 @@ export default function ShopkeeperDashboard() {
     },
     {
       icon: <Users className="text-yellow-600 w-6 h-6" />,
-      title: 'Suppliers',
-      description: 'Manage suppliers, add new ones, and chat with them.',
+      title: 'Place Orders',
+      description: 'Manage suppliers and place your orders accordingly.',
     },
     {
       icon: <BarChart2 className="text-pink-600 w-6 h-6" />,
@@ -30,9 +30,14 @@ export default function ShopkeeperDashboard() {
       description: 'Track and manage monthly expenses and pending payments.',
     },
     {
+      icon: <BellRing  className="text-pink-600 w-6 h-6" />,
+      title: 'Pending Reminders',
+      description: 'Watch over your pending unpaid amounts.',
+    },
+    {
       icon: <FileText className="text-red-600 w-6 h-6" />,
-      title: 'History',
-      description: 'Review past orders, transactions, and supplier data.',
+      title: 'Payments',
+      description: 'Make your Pending Payments, transactions, and supplier data.',
     },
   ];
 
@@ -50,10 +55,10 @@ export default function ShopkeeperDashboard() {
         <nav className="flex flex-col space-y-3 p-6 text-gray-700">
           <button onClick={() => navigate('/shopkeeper/inventory')} className="text-left px-4 py-2 rounded-lg hover:bg-yellow-100 transition font-medium"> Manage Inventory</button>
           <button onClick={() => navigate('/shopkeeper/orders')} className="text-left px-4 py-2 rounded-lg hover:bg-yellow-100 transition font-medium"> View Orders</button>
-          <button onClick={() => navigate('/shopkeeper/suppliers')} className="text-left px-4 py-2 rounded-lg hover:bg-yellow-100 transition font-medium"> Suppliers</button>
+          <button onClick={() => navigate('/shopkeeper/suppliers')} className="text-left px-4 py-2 rounded-lg hover:bg-yellow-100 transition font-medium"> Place Orders</button>
           <button onClick={() => navigate('/shopkeeper/expenses')} className="text-left px-4 py-2 rounded-lg hover:bg-yellow-100 transition font-medium">Expense Report</button>
           <button onClick={() => navigate('/shopkeeper/Reminders')} className="text-left px-4 py-2 rounded-lg hover:bg-yellow-100 transition font-medium">Reminder</button>
-          <button onClick={() => navigate('/shopkeeper/history')} className="text-left px-4 py-2 rounded-lg hover:bg-yellow-100 transition font-medium">History</button>
+          <button onClick={() => navigate('/shopkeeper/payments')} className="text-left px-4 py-2 rounded-lg hover:bg-yellow-100 transition font-medium">Payment</button>
         </nav>
       </aside>
 

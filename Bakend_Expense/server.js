@@ -23,7 +23,7 @@ dotenv.config();
 const app = express();
 
 app.use(cors({
-  origin: ["https://expenseminder0.onrender.com", "http://localhost:3000"],
+  origin: ["https://expenseminder0.onrender.com", "http://localhost:5173"],
   credentials: true
 })); // allow frontend requests
 app.use(express.json());
@@ -31,7 +31,7 @@ app.use(express.json());
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: 'https://expenseminder0.onrender.com', // frontend URL
+    origin: ["https://expenseminder0.onrender.com", "http://localhost:5173"], // frontend URL
     methods: ['GET', 'POST'],
   },
 });
@@ -40,10 +40,10 @@ const io = new Server(server, {
 mongoose.connect(process.env.MONGO_URI).then(() => console.log('MongoDB Connected'))
   .catch(err => console.log(err));
 
-// Routes
-//app.use('/api/shopkeeper/chat', chatRoutes);
+//Routes
+app.use('/api/shopkeeper/chat', chatRoutes);
 
-// Socket.io real-time
+//Socket.io real-time
 io.on('connection', (socket) => {
   console.log('User connected');
 

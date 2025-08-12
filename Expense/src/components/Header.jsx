@@ -77,7 +77,7 @@ export default function Header() {
       }
     } else {
       if (window.location.pathname !== "/") {
-        navigate("/");
+        navigate("/");  
       }
     }
   };
