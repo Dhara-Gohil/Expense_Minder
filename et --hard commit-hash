@@ -1,0 +1,45 @@
+[33m0352d16[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m)[m changes
+[33mb31b785[m changes
+[33m2384db1[m changes
+[33md96d54c[m changing react uri to VITE uri in sockets
+[33m703f95f[m changes in server.js
+[33m6ae1900[m changing frontend link in server.js
+[33m4c2bd20[m updated header.jsx using Link instead of <a> tags for routing
+[33m3968340[m changes in route
+[33m2e13717[m adding browserRoute to main.jsx
+[33mec2a945[m deleted unwanted file
+[33mb766374[m adding _redirects for telling render to redirect routes to index.html
+[33m66124ca[m head tag fix
+[33m639f9d5[m title change in index.html
+[33mcb3b27f[m changes
+[33m4bf4555[m editing files for deployment
+[33m6b6f158[m clearing git conflicts for deployment
+[33m97a1fe3[m changes for deployment
+[33mef59ee3[m Removed accidentally added Expense_Minder subfolder
+[33m16e716f[m latest commit , added few changes like email related , etc
+[33m5eb13b5[m added remainder function.
+[33m0668e75[m Fix header.jsx
+[33m0d04269[m Fix dashboard names.
+[33m5f0a465[m Fix supplier functions
+[33mc36eb6a[m Fix bill generate page.
+[33me89e392[m Fix Homepage issues.
+[33m76cf83b[m Add project PDF file
+[33md93928d[m Add project PDF file
+[33mc9d8c3d[m Add project PDF file
+[33me2f36a9[m Adding demo pdf.
+[33m20826d8[m Update Homepage.jsx (scroll effect)
+[33m0daa0dc[m Add RADEME.md file
+[33m06d9218[m Add RADEME.md file
+[33m399d598[m Add RADEME.md file
+[33m75db28a[m Final code
+[33m36b4613[m Added Supplier functions.
+[33me021f5c[m Adding supplier pages.
+[33mc11e4f2[m Added Shopkeeper functionalities.
+[33m9bcdece[m Added Shoopkeeper Pages
+[33m912c1fb[m Added Shoopkeeper Page
+[33mad5a247[m Adding login functionality
+[33m2b9a694[m Add signup functionality
+[33m25ed089[m Initial Commit
+[33ma227583[m Initial Commit
+[33mf17d90f[m Initial Commit
+[33m87b7814[m first commit
