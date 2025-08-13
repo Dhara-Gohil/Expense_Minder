@@ -19,7 +19,7 @@ export const signupShopkeeper = async (req, res) => {
     const newUser = new Shopkeeper({ name, email, password: hashedPassword, shopName });
     await newUser.save();
 
-    res.status(201).json({ message: "Shopkeeper registered successfully" });
+    res.status(201).json({ message: "Shopkeeper registered successfully please Login to continue" });
   } catch (err) {
     res.status(500).json({ message: "Server error" });
   }

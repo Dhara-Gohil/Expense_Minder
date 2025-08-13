@@ -43,7 +43,7 @@ function App() {
             <Route path="/signup" element={<SignUp />} />
             <Route path="/login" element={<Login />} />
             <Route path="/shopkeeper/dashboard" element={ <ProtectedRoute role="shopkeeper"><ShopkeeperDashboard /> </ProtectedRoute>} />
-            <Route path="/supplier/dashboard" element={ <ProtectedRoute role="shopkeeper"><SupplierDashboard /> </ProtectedRoute>} />
+            <Route path="/supplier/dashboard" element={ <ProtectedRoute role="supplier"><SupplierDashboard /> </ProtectedRoute>} />
 
             {/* Shopkeeper Routes */}
             <Route path="/shopkeeper/inventory" element={<ManageInventory />} />

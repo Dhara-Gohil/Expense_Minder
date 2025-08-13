@@ -1,11 +1,6 @@
 import express from "express";
 import { loginShopkeeper, loginSupplier } from "../controllers/authController.js";
-
-
-import {
-  signupShopkeeper,
-  signupSupplier
-} from "../controllers/authController.js";
+import {signupShopkeeper,signupSupplier} from "../controllers/authController.js";
 
 const router = express.Router();
 
